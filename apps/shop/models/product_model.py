@@ -31,6 +31,8 @@ class Product(models.Model):
     
     price = models.DecimalField(max_digits=10, decimal_places=0, verbose_name="قیمت")
     stock_quantity = models.PositiveIntegerField(default=0, verbose_name="تعداد موجودی")
+    package_quantity = models.PositiveIntegerField(default=1, verbose_name="تعداد در هر بسته")
+    allow_individual_sale = models.BooleanField(default=True, verbose_name="امکان فروش تکی")
     
     # روابط
     category = models.ForeignKey(Category, on_delete=models.PROTECT, verbose_name="دسته‌بندی")
@@ -40,6 +42,22 @@ class Product(models.Model):
 
     def __str__(self):
         return f"{self.name} - {self.brand}"
+
+    @property
+    def is_in_stock(self):
+        """بررسی اینکه آیا محصول در انبار موجود است یا نه"""
+        return self.stock_quantity > 0
+    
+    @property
+    def package_count(self):
+        """تعداد بسته‌های کامل موجود"""
+        return self.stock_quantity // self.package_quantity if self.package_quantity > 0 else 0
+    
+    @property
+    def individual_items_available(self):
+        """تعداد آیتم‌های تکی باقی‌مانده پس از بسته‌های کامل"""
+        return self.stock_quantity % self.package_quantity if self.package_quantity > 0 else self.stock_quantity
+
 
     class Meta:
         verbose_name = "محصول"

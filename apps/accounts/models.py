@@ -48,7 +48,20 @@ class User(AbstractUser):
 
     def __str__(self):
         return self.username
+
+# ======= Address Model ======= #
+class Address(models.Model):
+    """ مدل آدرس برای کاربران """
+    user = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name="کاربر")
+    province = models.CharField(max_length=50, verbose_name="استان")
+    city = models.CharField(max_length=50, verbose_name="شهر")
+    street = models.CharField(max_length=50, verbose_name="خیابان")
+    postal_code = models.CharField(max_length=10, verbose_name="کد پستی")
+    detail = models.TextField(verbose_name="آدرس دقیق")
+    created_at = models.DateTimeField(auto_now_add=True, verbose_name="تاریخ ایجاد")
+    updated_at = models.DateTimeField(auto_now=True, verbose_name="تاریخ به روزرسانی")
     
+
 # ======= Profile Model ======= #
 class Profile(models.Model):
     """
@@ -59,7 +72,7 @@ class Profile(models.Model):
     last_name = models.CharField(max_length=50, verbose_name="نام خانوادگی")
     phone = models.CharField(max_length=20, verbose_name="شماره تلفن همراه")
     landline = models.CharField(max_length=20, blank=True, null=True, verbose_name="تلفن ثابت")
-    address = models.TextField(blank=True, null=True, verbose_name="آدرس")
+    address = models.ForeignKey(Address, on_delete=models.SET_NULL, blank=True, null=True, verbose_name="آدرس")
     photo = models.ImageField(upload_to='profile_photos/', blank=True, null=True, verbose_name="عکس پروفایل")
 
     def __str__(self):
