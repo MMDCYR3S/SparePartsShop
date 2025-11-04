@@ -57,7 +57,6 @@ class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, verbose_name="کاربر")
     first_name = models.CharField(max_length=50, verbose_name="نام")
     last_name = models.CharField(max_length=50, verbose_name="نام خانوادگی")
-    email = models.EmailField(verbose_name="ایمیل")
     phone = models.CharField(max_length=20, verbose_name="شماره تلفن همراه")
     landline = models.CharField(max_length=20, blank=True, null=True, verbose_name="تلفن ثابت")
     address = models.TextField(blank=True, null=True, verbose_name="آدرس")
