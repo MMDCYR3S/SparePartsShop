@@ -4,4 +4,5 @@ app_name = "v1"
 
 urlpatterns = [
     path("accounts/", include("apps.api.v1.accounts.urls")),
+    path("shop/", include("apps.api.v1.shop.urls")),
 ]

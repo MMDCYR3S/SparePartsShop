@@ -43,7 +43,6 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-    "django.contrib.sites",
     
     "corsheaders",
     "rest_framework",
@@ -51,6 +50,7 @@ INSTALLED_APPS = [
     "rest_framework_simplejwt.token_blacklist",
     "django_filters",
     "drf_spectacular",
+    'django_extensions',
     
     "apps.accounts.apps.AccountsConfig",
     "apps.shop.apps.ShopConfig",
