@@ -25,7 +25,6 @@ class Order(models.Model):
     order_date = models.DateTimeField(auto_now_add=True, verbose_name="تاریخ سفارش")
     shipping_address = models.TextField(verbose_name="آدرس ارسال")
     total_amount = models.DecimalField(max_digits=12, decimal_places=0, verbose_name="مبلغ کل")
-    # هزینه ارسال طبق درخواست شما در سیستم ثبت نمی‌شود
 
     def __str__(self):
         return f"سفارش شماره {self.id} - {self.user.username}"
