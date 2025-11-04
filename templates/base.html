@@ -1,0 +1,27 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}داشبورد ادمین | پنل مدیریتی{% endblock tiele %}</title>
+</head>
+
+{% block extra_css %}
+    <!-- استایل های اضافی رو اینجا بزار -->
+{% endblock extra_css %}
+    
+
+<body>
+    
+    {% block content %}
+        <!-- بخش اصلی صفحه -->
+    {% endblock content %}
+        
+</body>
+
+{% block extra_js %}
+    
+{% endblock extra_js %}
+    
+</html>

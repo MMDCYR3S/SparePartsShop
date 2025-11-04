@@ -10,3 +10,4 @@ django-taggit
 drf-spectacular
 markdown
 Pillow
+python-slugify

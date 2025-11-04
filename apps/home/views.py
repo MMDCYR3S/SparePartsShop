@@ -1,3 +1,7 @@
-from django.shortcuts import render
+from django.views.generic import TemplateView
 
-# Create your views here.
+# ======= Template View ======= #
+class IndexView(TemplateView):
+    """ صفحه اصلی """
+    
+    template_name = "home/index.html"
