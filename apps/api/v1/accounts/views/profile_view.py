@@ -1,8 +1,9 @@
-from rest_framework.generics import RetrieveUpdateAPIView
+from rest_framework.generics import RetrieveUpdateAPIView, ListAPIView
 from rest_framework.permissions import IsAuthenticated
 
 from apps.accounts.models import Profile
-from ..serializers import ProfileSerializer
+from apps.orders.models import Order
+from ..serializers import ProfileSerializer, ProfileOrderSerializer
 
 # ========= Porilfe View ========= #
 class ProfileView(RetrieveUpdateAPIView):
@@ -11,6 +12,14 @@ class ProfileView(RetrieveUpdateAPIView):
     permission_classes = [IsAuthenticated]
 
     def get_object(self):
-        # همیشه پروفایل کاربر لاگین کرده را برمی‌گرداند
         profile, created = Profile.objects.get_or_create(user=self.request.user)
         return profile
+    
+# ======== Profile Order View ======== #
+class ProfileOrderView(ListAPIView):
+    """ نمایش سفارشات کاربر """
+    serializer_class = ProfileOrderSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        return Order.objects.filter(user=self.request.user)
