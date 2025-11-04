@@ -2,6 +2,20 @@ from django.db import models
 from .car_model import Car
 from .category_model import Category
 
+# =========== Product Image Model =========== #
+class ProductImage(models.Model):
+    """ مدل برای تصاویر محصولات """
+    product = models.ForeignKey('Product', on_delete=models.CASCADE, related_name='images', verbose_name="محصول")
+    image = models.ImageField(upload_to='products/', verbose_name="تصویر")
+    is_main = models.BooleanField(default=False, verbose_name="تصویر اصلی")
+    created_at = models.DateTimeField(verbose_name=("تاریخ ایجاد"), auto_now_add=True)
+    updated_at = models.DateTimeField(verbose_name=("تاریخ به روزرسانی"), auto_now=True)
+    
+    def __str__(self):
+        return self.product.name
+    
+
+# =========== Product Model =========== #
 class Product(models.Model):
     """
     مدل اصلی برای محصولات (لوازم یدکی)
