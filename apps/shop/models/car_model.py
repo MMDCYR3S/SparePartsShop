@@ -8,6 +8,8 @@ class Car(models.Model):
     make = models.CharField(max_length=50, verbose_name="برند خودرو")
     model = models.CharField(max_length=50, verbose_name="مدل خودرو")
     year = models.IntegerField(verbose_name="سال ساخت")
+    created_at = models.DateTimeField(auto_now_add=True, verbose_name="تاریخ ایجاد")
+    updated_at = models.DateTimeField(auto_now=True, verbose_name="تاریخ به روزرسانی")
 
     def __str__(self):
         return f"{self.make} {self.model} ({self.year})"
