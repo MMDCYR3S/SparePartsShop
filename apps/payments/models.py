@@ -6,7 +6,6 @@ from apps.orders.models import Order
 # ======== Payment Type Model ======== #
 class PaymentType(models.TextChoices):
     CASH = 'cash', _('نقدی')
-    CARD_TO_CARD = 'card_to_card', _('کارت به کارت')
     CHECK = 'check', _('چکی')
 
 # ======== Payment Status Model ======== #
