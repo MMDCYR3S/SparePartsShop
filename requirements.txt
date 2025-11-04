@@ -1,8 +1,11 @@
 Django
 djangorestframework
+djangorestframework-simplejwt
+django-debug-toolbar
 django-cors-headers
 django-filter
-markdown
 django-taggit
 drf-spectacular
 django-environ
+markdown
+Pillow
