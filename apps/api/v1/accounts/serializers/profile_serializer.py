@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from apps.accounts.models import Profile, User
+from apps.accounts.models import Profile, Address
 from apps.shop.models import Product
 from apps.orders.models import Order, OrderItem
 
@@ -43,3 +43,10 @@ class ProfileOrderSerializer(serializers.ModelSerializer):
     class Meta:
         model = Order
         fields = ("id", "user", "order_date", "status", "total_amount", "shipping_address", "order_items")
+        
+# ======== Address Serializer ======== #
+class AddressSerializer(serializers.ModelSerializer):
+    """سریالایزر برای مدل آدرس"""
+    class Meta:
+        model = Address
+        fields = ['id', 'province', 'city', 'street', 'postal_code', 'detail']
