@@ -9,7 +9,7 @@ class AddressSerializer(serializers.ModelSerializer):
     """سریالایزر ساده برای نمایش آدرس‌ها در کنار کاربر"""
     class Meta:
         model = Address
-        fields = ['id', 'province', 'city', 'street', 'postal_code', 'detail']
+        fields = ['id', 'user', 'province', 'city', 'street', 'postal_code', 'detail']
 
 # ======= User Management Serializer ======= #
 class UserManagementSerializer(serializers.ModelSerializer):
@@ -23,10 +23,10 @@ class UserManagementSerializer(serializers.ModelSerializer):
     phone = serializers.CharField(max_length=20, required=False, allow_blank=True)
     landline = serializers.CharField(max_length=20, required=False, allow_blank=True)
     photo = serializers.ImageField(required=False, allow_null=True)
-    addresses = AddressSerializer(many=True, read_only=True)
+    addresses = AddressSerializer(many=True, read_only=True, source='address_set')
 
     # فیلد رمز عبور باید فقط برای نوشتن باشد و در پاسخ نمایش داده نشود
-    password = serializers.CharField(write_only=True, required=True)
+    password = serializers.CharField(write_only=True, required=False)
 
     class Meta:
         model = User
