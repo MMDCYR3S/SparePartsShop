@@ -7,6 +7,8 @@ from .views import (
     CategoryManagementViewSet,
     OrderManagementViewSet,
     PaymentManagementViewSet,
+    ContactManagementViewSet,
+    BannerManagementViewSet,
 )
 
 router = DefaultRouter()
@@ -16,10 +18,12 @@ router.register(r'cars', CarManagementViewSet, basename='car-management')
 router.register(r'categories', CategoryManagementViewSet, basename='category-management')
 router.register(r'orders', OrderManagementViewSet, basename='order-management')
 router.register(r'payments', PaymentManagementViewSet, basename='payment-management')
+router.register(r'contacts', ContactManagementViewSet, basename='contact-management')
+router.register(r'banners', BannerManagementViewSet, basename='banner-management')
 
 
 app_name = 'dashboard'
 
 urlpatterns = [
-    path('admin/', include(router.urls)),
+    path('', include(router.urls)),
 ]

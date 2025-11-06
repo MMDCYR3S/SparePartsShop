@@ -11,6 +11,7 @@ class Contact(models.Model):
     email = models.EmailField(verbose_name=("ایمیل"), max_length=100)
     subject = models.CharField(max_length=100, verbose_name=("عنوان"))
     message = models.TextField(verbose_name=("پیام"))
+    is_read = models.BooleanField(verbose_name=("خوانده شده"), default=False)
     created_at = models.DateTimeField(verbose_name=("تاریخ ایجاد"), auto_now_add=True)
     updated_at = models.DateTimeField(verbose_name=("تاریخ بزورسانی"), auto_now=True)
     

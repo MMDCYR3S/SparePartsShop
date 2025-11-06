@@ -4,3 +4,5 @@ from .cars_view import CarManagementViewSet
 from .categories_view import CategoryManagementViewSet
 from .orders_view import OrderManagementViewSet
 from .payments_view import PaymentManagementViewSet
+from .contacts_view import ContactManagementViewSet
+from .banner_view import BannerManagementViewSet

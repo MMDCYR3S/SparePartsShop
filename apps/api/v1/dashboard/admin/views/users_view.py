@@ -4,9 +4,10 @@ from rest_framework.response import Response
 from rest_framework.parsers import MultiPartParser, FormParser
 from django.shortcuts import get_object_or_404
 from django.db import transaction
+from drf_spectacular.utils import extend_schema
 
-from apps.accounts.models import User
-from ..serializers import UserManagementSerializer
+from apps.accounts.models import User, Address
+from ..serializers import UserManagementSerializer, AddressSerializer
 from ..permissions import IsAdminOrSuperUser
 
 # ========= User Management ViewSet ========= #
@@ -24,22 +25,18 @@ class UserManagementViewSet(viewsets.ModelViewSet):
     ordering = ['-date_joined']
     parser_classes = [MultiPartParser, FormParser]
     
-    @action(detail=False, methods=['POST'], url_path="bulk-create")
-    def bulk_create(self, request):
-        """
-        ایجاد چندین کاربر به صورت همزمان.
-        بدنه درخواست باید یک لیست از آبجکت‌های کاربر باشد.
-        """
-        serializer = self.get_serializer(data=request.data, many=True)
-        serializer.is_valid(raise_exception=True)
-        serializer.save()
-        return Response(serializer.data, status=status.HTTP_201_CREATED)
-    
-    @action(detail=False, methods=['PATCH'], url_path="bulk-update")
+    @extend_schema(
+        request=UserManagementSerializer(many=True),
+        responses={200: UserManagementSerializer(many=True)}
+    )
+    @action(detail=False, methods=['patch'], url_path="bulk-update")
     def bulk_update(self, request):
         """
         بروزرسانی چندین کاربر به صورت همزمان.
         بدنه درخواست باید یک لیست از آبجکت‌های کاربر باشد.
+        شناسه کاربران رو میگیره یا همون id و به تعداد همون ها،
+        مقدار is_active باید تغییر کنه به چیزی که ادمین میخواد، حالا یا
+        به فعال یا غیر فعال تغییرش میده.
         """
         updated_instances = []
         errors = []
@@ -67,11 +64,12 @@ class UserManagementViewSet(viewsets.ModelViewSet):
             
         return Response(updated_instances, status=status.HTTP_200_OK)
 
-    @action(detail=False, methods=['DELETE'], url_path="bulk-delete")
+    @action(detail=False, methods=['delete'], url_path="bulk-delete")
     def bulk_delete(self, request):
         """
         حذف چندین کاربر به صورت همزمان.
-        بدنه درخواست باید یک لیست از شناسه‌های کاربر باشد.
+        بدنه درخواست باید یک آبجکت با کلید ids و مقدار لیستی از شناسه‌ها باشد.
+        {"ids": [1, 2, 3]}
         """
         ids_to_delete = request.data.get("ids")
         if not isinstance(ids_to_delete, list) or not ids_to_delete:
@@ -86,37 +84,3 @@ class UserManagementViewSet(viewsets.ModelViewSet):
             {"message": f"{count} کاربر با موفقیت حذف شد."}, 
             status=status.HTTP_204_NO_CONTENT
         )
-    
-    @action(detail=True, methods=['post'], url_path='addresses')
-    def create_address(self, request, pk=None):
-        """
-        ایجاد یک آدرس جدید برای کاربر مشخص شده با pk.
-        URL: POST /api/v1/admin/users/<pk>/addresses/
-        """
-        user = self.get_object()
-        serializer = AddressSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save(user=user)
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-    
-    @action(detail=True, methods=['patch'], url_path='addresses/(?P<address_pk>[^/.]+)')
-    def update_address(self, request, pk=None, address_pk=None):
-        """
-        ویرایش یک آدرس مشخص که متعلق به کاربر است.
-        URL: PATCH /api/v1/admin/users/<pk>/addresses/<address_pk>/
-        """
-        user = self.get_object()
-        try:
-            address = Address.objects.get(pk=address_pk, user=user)
-        except Address.DoesNotExist:
-            return Response(
-                {"error": "آدرس مورد نظر یافت نشد یا متعلق به این کاربر نیست."},
-                status=status.HTTP_404_NOT_FOUND
-            )
-        
-        serializer = AddressSerializer(address, data=request.data, partial=True)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
