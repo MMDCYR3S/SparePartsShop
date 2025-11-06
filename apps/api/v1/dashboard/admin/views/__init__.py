@@ -1,0 +1,6 @@
+from .users_view import UserManagementViewSet
+from .products_view import ProductManagementViewSet
+from .cars_view import CarManagementViewSet
+from .categories_view import CategoryManagementViewSet
+from .orders_view import OrderManagementViewSet
+from .payments_view import PaymentManagementViewSet

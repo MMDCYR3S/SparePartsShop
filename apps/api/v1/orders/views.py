@@ -14,7 +14,7 @@ from .serializers import (
 )
 from apps.carts.models import Cart, CartItem
 from apps.accounts.models import Address, Profile
-from apps.api.v1.accounts.serializers import AddressSerializer
+from .serializers import AddressSerializer
 
 # ========== Checkout View ========== #
 class CheckoutView(GenericAPIView):

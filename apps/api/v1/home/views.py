@@ -1,8 +1,8 @@
 from rest_framework import generics, permissions
 from rest_framework.response import Response
 from rest_framework import status
-from apps.home.models import Contact
-from .serializers import ContactSerializer
+from apps.home.models import Contact, Banner
+from .serializers import ContactSerializer, BannerSerializer
 
 # ====== Contact Create View ======= #
 class ContactCreateView(generics.CreateAPIView):
@@ -28,3 +28,12 @@ class ContactCreateView(generics.CreateAPIView):
             status=status.HTTP_201_CREATED,
             headers=headers
         )
+        
+# ====== Banner List View ======= #
+class BannerListView(generics.ListAPIView):
+    """
+    ویو برای نمایش لیست بنرها.
+    """
+    queryset = Banner.objects.all()
+    serializer_class = BannerSerializer
+    permission_classes = [permissions.AllowAny]
