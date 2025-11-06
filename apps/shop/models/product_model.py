@@ -1,4 +1,6 @@
+from slugify import slugify
 from django.db import models
+
 from .car_model import Car
 from .category_model import Category
 
@@ -21,6 +23,7 @@ class Product(models.Model):
     مدل اصلی برای محصولات (لوازم یدکی)
     """
     name = models.CharField(max_length=200, verbose_name="نام قطعه")
+    slug = models.SlugField(max_length=200, unique=True, blank=True, null=True, verbose_name="اسلاگ")
     description = models.TextField(blank=True, null=True, verbose_name="توضیحات")
     
     # مشخصات فنی کلیدی
@@ -58,6 +61,10 @@ class Product(models.Model):
         """تعداد آیتم‌های تکی باقی‌مانده پس از بسته‌های کامل"""
         return self.stock_quantity % self.package_quantity if self.package_quantity > 0 else self.stock_quantity
 
+    def save(self):
+        """ ذخیره خودکار اسلاگ """
+        self.slug = slugify(self.name)
+        super().save()
 
     class Meta:
         verbose_name = "محصول"

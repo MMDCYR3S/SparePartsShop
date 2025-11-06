@@ -52,3 +52,11 @@ class PaymentSerializer(serializers.ModelSerializer):
         model = Payment
         fields = ['id', 'order', 'payment_type', 'payment_type_display', 'status', 'status_display', 'transaction_id']
         read_only_fields = ['order', 'status']
+
+# ======== Address Serializer ======== #
+class AddressSerializer(serializers.ModelSerializer):
+    """سریالایزر برای مدل آدرس"""
+    class Meta:
+        model = Address
+        fields = ['id', 'province', 'city', 'street', 'postal_code', 'detail']
+
