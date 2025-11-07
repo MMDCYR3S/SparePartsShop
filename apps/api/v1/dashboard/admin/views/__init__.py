@@ -6,3 +6,4 @@ from .orders_view import OrderManagementViewSet
 from .payments_view import PaymentManagementViewSet
 from .contacts_view import ContactManagementViewSet
 from .banner_view import BannerManagementViewSet
+from .index_view import DashboardView

@@ -94,7 +94,8 @@ class CheckoutView(GenericAPIView):
                     order = Order.objects.create(
                         user=request.user,
                         shipping_address=shipping_address,
-                        total_amount=total_amount
+                        total_amount=total_amount,
+                        payment_type=payment_type
                     )
                     
                     # ایجاد آیتم‌های سفارش و کاهش موجودی
@@ -109,15 +110,10 @@ class CheckoutView(GenericAPIView):
                         product.stock_quantity -= cart_item.quantity
                         product.save()
                     
-                    # ایجاد پرداخت
-                    payment = Payment.objects.create(
-                        order=order,
-                        payment_type=payment_type,
-                        status=PaymentStatus.PENDING
-                    )
-                    
                     # خالی کردن سبد خرید
                     cart.items.all().delete()
+                    
+                    payment = Payment.objects.get(order=order)
                     
                     # آماده‌سازی پاسخ
                     response_data = {

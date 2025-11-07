@@ -23,7 +23,7 @@ class PaymentManagementSerializer(serializers.ModelSerializer):
         model = Payment
         fields = [
             'id', 'order', 'order_summary', 'payment_type', 'payment_type_display',
-            'status', 'status_display', 'transaction_id'
+            'status', 'status_display', 'amount', 'transaction_id'
         ]
         read_only_fields = ['order']
 
