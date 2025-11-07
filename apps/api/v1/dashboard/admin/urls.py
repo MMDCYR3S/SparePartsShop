@@ -9,6 +9,7 @@ from .views import (
     PaymentManagementViewSet,
     ContactManagementViewSet,
     BannerManagementViewSet,
+    DashboardView,
 )
 
 router = DefaultRouter()
@@ -26,4 +27,5 @@ app_name = 'dashboard'
 
 urlpatterns = [
     path('', include(router.urls)),
+    path('index/', DashboardView.as_view(), name='dashboard'),
 ]

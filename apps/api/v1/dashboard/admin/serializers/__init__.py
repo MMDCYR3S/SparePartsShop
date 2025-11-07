@@ -6,3 +6,4 @@ from .orders_serializer import OrderManagementSerializer
 from .payments_serializer import PaymentManagementSerializer
 from .contacts_serializer import ContactManagementSerializer
 from .banner_serializer import BannerManagementSerializer
+from .index_serializer import DashboardSerializer

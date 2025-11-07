@@ -1,7 +1,7 @@
 from rest_framework import viewsets, status, filters
 from rest_framework.decorators import action
 from rest_framework.response import Response
-from rest_framework.parsers import MultiPartParser, FormParser
+from rest_framework.parsers import MultiPartParser, FormParser, JSONParser
 from django.shortcuts import get_object_or_404
 from django.db import transaction
 from drf_spectacular.utils import extend_schema
@@ -23,31 +23,48 @@ class UserManagementViewSet(viewsets.ModelViewSet):
     search_fields = ['id', 'username', 'email', 'profile__first_name', 'profile__last_name']
     ordering_fields = ['id', 'username', 'date_joined']
     ordering = ['-date_joined']
-    parser_classes = [MultiPartParser, FormParser]
-    
+    parser_classes = [MultiPartParser, FormParser, JSONParser]
+
     @extend_schema(
-        request=UserManagementSerializer(many=True),
+        # مشخص می‌کند که بدنه درخواست یک لیست از آبجکت‌های کاربر است
+        request=UserManagementSerializer(many=True, partial=True),
         responses={200: UserManagementSerializer(many=True)}
-    )
+    )    
     @action(detail=False, methods=['patch'], url_path="bulk-update")
     def bulk_update(self, request):
         """
         بروزرسانی چندین کاربر به صورت همزمان.
         بدنه درخواست باید یک لیست از آبجکت‌های کاربر باشد.
-        شناسه کاربران رو میگیره یا همون id و به تعداد همون ها،
-        مقدار is_active باید تغییر کنه به چیزی که ادمین میخواد، حالا یا
-        به فعال یا غیر فعال تغییرش میده.
+        مثال: [{"id": 1, "is_active": false}, {"id": 2, "is_active": true}]
         """
+        # بررسی می‌کند که آیا بدنه درخواست یک لیست است یا خیر
+        if not isinstance(request.data, list):
+            return Response(
+                {"error": "بدنه درخواست باید یک لیست باشد."},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
         updated_instances = []
         errors = []
         
         with transaction.atomic():
             for item in request.data:
+                # بررسی می‌کند که هر آیتم در لیست، یک دیکشنری باشد
+                if not isinstance(item, dict):
+                    errors.append({"message": "هر آیتم در لیست باید یک آبجکت (Dictionary) باشد.", "item": item})
+                    continue
+
                 user_id = item.get("id")
                 if not user_id:
-                    errors.append({"message": "هر کاربر باید شامل شناسه باشد.", "item": {item}})
+                    errors.append({"message": "هر کاربر باید شامل شناسه (id) باشد.", "item": item})
+                    continue
                 
-                user_instance = get_object_or_404(User, id=user_id)
+                try:
+                    user_instance = User.objects.get(id=user_id)
+                except User.DoesNotExist:
+                    errors.append({"message": "کاربری با این شناسه یافت نشد.", "item": item})
+                    continue
+                
                 serializer = self.get_serializer(user_instance, data=item, partial=True)
                 
                 if serializer.is_valid():
@@ -55,11 +72,11 @@ class UserManagementViewSet(viewsets.ModelViewSet):
                     updated_instances.append(serializer.data)
                 else:
                     errors.append({"message": "مشکلی در بروزرسانی وجود دارد.", "item": item, "errors": serializer.errors})
-            
+        
         if errors:
             return Response(
-                {"updated": updated_instances,
-                "errors": errors}, status=status.HTTP_207_MULTI_STATUS
+                {"updated": updated_instances, "errors": errors},
+                status=status.HTTP_207_MULTI_STATUS
             )
             
         return Response(updated_instances, status=status.HTTP_200_OK)
