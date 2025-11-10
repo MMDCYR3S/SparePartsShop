@@ -43,7 +43,6 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-    "django.contrib.sites",
     
     "corsheaders",
     "rest_framework",
@@ -51,6 +50,7 @@ INSTALLED_APPS = [
     "rest_framework_simplejwt.token_blacklist",
     "django_filters",
     "drf_spectacular",
+    'django_extensions',
     
     "apps.accounts.apps.AccountsConfig",
     "apps.shop.apps.ShopConfig",
@@ -158,7 +158,7 @@ REST_FRAMEWORK = {
 
 # ======== Simple JWT Settings ======== #
 SIMPLE_JWT = {
-    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=15), 
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=75), 
     'REFRESH_TOKEN_LIFETIME': timedelta(days=7),
     'ROTATE_REFRESH_TOKENS': True,
     'BLACKLIST_AFTER_ROTATION': True,
@@ -171,3 +171,5 @@ SIMPLE_JWT = {
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",
 ]
+
+CORS_ALLOW_ALL_ORIGINS = True

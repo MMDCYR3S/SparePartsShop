@@ -1,2 +1,2 @@
 # SparePartsShop
-this is a web app with DRF and Vanilla JS
+this is a web app with DRF and React JS

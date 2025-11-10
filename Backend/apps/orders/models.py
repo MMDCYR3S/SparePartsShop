@@ -3,6 +3,7 @@ from django.utils.translation import gettext_lazy as _
 from django.contrib.auth import get_user_model
 
 from apps.shop.models import Product
+from apps.payments.models import PaymentType
 
 User = get_user_model()
 
@@ -25,6 +26,14 @@ class Order(models.Model):
     order_date = models.DateTimeField(auto_now_add=True, verbose_name="تاریخ سفارش")
     shipping_address = models.TextField(verbose_name="آدرس ارسال")
     total_amount = models.DecimalField(max_digits=12, decimal_places=0, verbose_name="مبلغ کل")
+    payment_type = models.CharField(
+        max_length=20, 
+        choices=PaymentType.choices, 
+        default=PaymentType.CASH, 
+        verbose_name="نوع پرداخت"
+    )
+    created_at = models.DateTimeField(auto_now_add=True, null=True, blank=True, verbose_name="تاریخ ایجاد")
+    updated_at = models.DateTimeField(auto_now=True, null=True, blank=True, verbose_name="تاریخ به روزرسانی")
 
     def __str__(self):
         return f"سفارش شماره {self.id} - {self.user.username}"

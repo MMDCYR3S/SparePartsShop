@@ -1,54 +1,79 @@
 from django.db import models
-from django.contrib.auth.models import AbstractUser, BaseUserManager
+from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
 from django.utils.translation import gettext_lazy as _
 
-# ======= User Manager Model ======= #
+
+# ========== User Manager ========== #
 class UserManager(BaseUserManager):
+    """Summary:
+    Custom user model manager where email is the unique
+    identifiers for authentication instead of usernames.
     """
-     مدل مدیر سفیرشی که از BaseUserManager ارث‌بری می‌کند.
-     اگر شما یک مدل کاربر سفارشی سازید، باید آن را با این مدل جایگزین کنید.
-     """
-    def create_user(self, username, email, password=None, **extra_fields):
+
+    def create_user(self, username, password, **extra_fields):
+        """Description:
+        Create and save a user with username and password and
+        extra fields.
         """
-        ایجاد کاربر جدید با ایمیل و رمز عبور.
-        """
-        if not email:
-            raise ValueError(_('The Email must be set'))
-        email = self.normalize_email(email)
-        user = self.model(username=username, email=email, **extra_fields)
+        if not username:
+            raise ValueError(_("The email must be set!"))
+        user = self.model(username=username, **extra_fields)
         user.set_password(password)
-        
         user.save()
         return user
-    
-    def create_superuser(self, username, email, password=None, **extra_fields):
+
+    def create_superuser(self, username, password, **extra_fields):
+        """Description:
+        Create and save a superuser with email and password and
+        extra fields.
         """
-        ایجاد کاربر مدیر سیستم جدید با ایمیل و رمز عبور.
-        """
-        extra_fields.setdefault('is_staff', True)
-        extra_fields.setdefault('is_superuser', True)
-        extra_fields.setdefault('is_active', True)
+        extra_fields.setdefault("is_staff", True)
+        extra_fields.setdefault("is_superuser", True)
+        extra_fields.setdefault("is_active", True)
 
-        if extra_fields.get('is_staff') is not True:
-            raise ValueError(_('Superuser must have is_staff=True.'))
-        if extra_fields.get('is_superuser') is not True:
-            raise ValueError(_('Superuser must have is_superuser=True.'))
+        if extra_fields.get("is_staff") != True:
+            raise ValueError(_("Superuser must have staff permission!"))
 
-        return self.create_user(username, email, password, **extra_fields)
+        if extra_fields.get("is_superuser") != True:
+            raise ValueError(_("Superuser must have superuser permission!"))
+
+        return self.create_user(username, password, **extra_fields)
 
 
-# ======= User Model ======= #
-class User(AbstractUser):
-    """
-    مدل کاربر سفارشی که فقط مسئول احراز هویت است.
-    """
-    is_admin = models.BooleanField(default=False, verbose_name="ادمین")
+# ======== User Model ======== #
+class User(AbstractBaseUser, PermissionsMixin):
+    """This is a User Model where It gets email as username."""
+
+    username = models.CharField(max_length=200, unique=True)
+    email = models.EmailField(max_length=254)
+    is_staff = models.BooleanField(default=False)
+    is_active = models.BooleanField(default=True)
+    is_superuser = models.BooleanField(default=False)
+
+    USERNAME_FIELD = "username"
+    REQUIRED_FIELDS = []
 
     objects = UserManager()
 
+    created_date = models.DateTimeField(auto_now_add=True)
+    updated_date = models.DateTimeField(auto_now=True)
+
     def __str__(self):
-        return self.username
+        return self.email
+
+# ======= Address Model ======= #
+class Address(models.Model):
+    """ مدل آدرس برای کاربران """
+    user = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name="کاربر")
+    province = models.CharField(max_length=50, verbose_name="استان")
+    city = models.CharField(max_length=50, verbose_name="شهر")
+    street = models.CharField(max_length=50, verbose_name="خیابان")
+    postal_code = models.CharField(max_length=10, verbose_name="کد پستی")
+    detail = models.TextField(verbose_name="آدرس دقیق")
+    created_at = models.DateTimeField(auto_now_add=True, verbose_name="تاریخ ایجاد")
+    updated_at = models.DateTimeField(auto_now=True, verbose_name="تاریخ به روزرسانی")
     
+
 # ======= Profile Model ======= #
 class Profile(models.Model):
     """
@@ -59,7 +84,7 @@ class Profile(models.Model):
     last_name = models.CharField(max_length=50, verbose_name="نام خانوادگی")
     phone = models.CharField(max_length=20, verbose_name="شماره تلفن همراه")
     landline = models.CharField(max_length=20, blank=True, null=True, verbose_name="تلفن ثابت")
-    address = models.TextField(blank=True, null=True, verbose_name="آدرس")
+    address = models.ForeignKey(Address, on_delete=models.SET_NULL, blank=True, null=True, verbose_name="آدرس")
     photo = models.ImageField(upload_to='profile_photos/', blank=True, null=True, verbose_name="عکس پروفایل")
 
     def __str__(self):
