@@ -4,6 +4,7 @@ from rest_framework.response import Response
 from django.core.exceptions import PermissionDenied
 from rest_framework.generics import RetrieveUpdateDestroyAPIView, GenericAPIView
 from rest_framework import status
+from drf_spectacular.utils import extend_schema
 
 from apps.accounts.models import Profile, Address
 from apps.orders.models import Order
@@ -14,6 +15,7 @@ from ..serializers import (
 )
 
 # ========= Profile View ========= #
+@extend_schema(tags=['Profile'])
 class ProfileView(RetrieveUpdateAPIView):
     """ نمایش و ویرایش پروفایل کاربر """
     serializer_class = ProfileSerializer
@@ -24,6 +26,7 @@ class ProfileView(RetrieveUpdateAPIView):
         return profile
     
 # ======== Profile Order View ======== #
+@extend_schema(tags=['Profile'])
 class ProfileOrderView(ListAPIView):
     """ نمایش سفارشات کاربر """
     serializer_class = ProfileOrderSerializer
@@ -32,7 +35,8 @@ class ProfileOrderView(ListAPIView):
     def get_queryset(self):
         return Order.objects.filter(user=self.request.user)
     
-# ======== Address Detail View ========
+# ======== Address Detail View ======== #
+@extend_schema(tags=['Profile'])
 class AddressDetailView(RetrieveUpdateDestroyAPIView):
     """
     ویو برای نمایش، ویرایش و حذف یک آدرس خاص.
@@ -56,7 +60,8 @@ class AddressDetailView(RetrieveUpdateDestroyAPIView):
             from rest_framework.response import Response
             return Response({"error": "آدرس یافت نشد."}, status=status.HTTP_404_NOT_FOUND)
         
-# ======== Address Create View ========
+# ======== Address Create View ======== #
+@extend_schema(tags=['Profile'])
 class AddressListCreateView(GenericAPIView):
     """نمایش و ایجاد آدرس‌های کاربر"""
     permission_classes = [IsAuthenticated]

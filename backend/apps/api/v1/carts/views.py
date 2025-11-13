@@ -4,6 +4,7 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 from rest_framework.generics import GenericAPIView
 from django.shortcuts import get_object_or_404
+from drf_spectacular.utils import extend_schema
 
 from apps.carts.models import Cart, CartItem
 from apps.shop.models import Product
@@ -13,6 +14,7 @@ from .serializers import (
 )
 
 # =========== Cart View =========== #
+@extend_schema(tags=['Cart'])
 class CartView(GenericAPIView):
     """نمایش و خالی کردن سبد خرید"""
     permission_classes = [permissions.IsAuthenticated]
@@ -30,6 +32,7 @@ class CartView(GenericAPIView):
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 # =========== Add To Cart =========== #
+@extend_schema(tags=['Cart'])
 class AddToCartView(GenericAPIView):
     """افزودن محصول به سبد خرید"""
     permission_classes = [permissions.IsAuthenticated]
@@ -80,6 +83,7 @@ class AddToCartView(GenericAPIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 # =========== Update Cart Item =========== #
+@extend_schema(tags=['Cart'])
 class UpdateCartItemView(GenericAPIView):
     """ویرایش تعداد یک آیتم در سبد خرید"""
     permission_classes = [permissions.IsAuthenticated]
@@ -116,6 +120,7 @@ class UpdateCartItemView(GenericAPIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 # =========== Remove From Cart View =========== #
+@extend_schema(tags=['Cart'])
 class RemoveFromCartView(GenericAPIView):
     """حذف یک آیتم از سبد خرید"""
     permission_classes = [permissions.IsAuthenticated]

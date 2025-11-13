@@ -7,12 +7,14 @@ from django.utils.encoding import force_bytes, force_str
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.core.mail import send_mail
 from django.core.cache import cache
+from drf_spectacular.utils import extend_schema
 
 from ..serializers import PasswordResetRequestSerializer, PasswordResetConfirmSerializer
 
 User = get_user_model()
 
 # ======= Password Reset Request View ======= #
+@extend_schema(tags=['Password'])
 class PasswordResetRequestView(GenericAPIView):
     """ ارسال لینک بازیابی رمز عبور به ایمیل """
     serializer_class = PasswordResetRequestSerializer
@@ -52,6 +54,7 @@ class PasswordResetRequestView(GenericAPIView):
         )
 
 # ========== Password Reset Confirm View ========== #
+@extend_schema(tags=['Password'])
 class PasswordResetConfirmView(GenericAPIView):
     """ بازیابی رمز عبور و تایید """
     

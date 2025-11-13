@@ -1,10 +1,14 @@
 from rest_framework import viewsets, status, filters
 from rest_framework.decorators import action
 from rest_framework.response import Response
+from drf_spectacular.utils import extend_schema
+
 from apps.payments.models import Payment, PaymentStatus
 from ..serializers import PaymentManagementSerializer
 from ..permissions import IsAdminOrSuperUser
 
+# ====== Payment Management ViewSet ======= #
+@extend_schema(tags=['Payment-Management'])
 class PaymentManagementViewSet(viewsets.ModelViewSet):
     """
     ویوست برای مدیریت کامل پرداخت‌ها توسط ادمین.

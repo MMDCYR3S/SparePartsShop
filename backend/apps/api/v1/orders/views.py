@@ -1,5 +1,3 @@
-# در فایل views.py اپلیکیشن orders
-
 from rest_framework import status, permissions
 from rest_framework.response import Response
 from rest_framework.generics import GenericAPIView
@@ -7,6 +5,8 @@ from django.shortcuts import get_object_or_404
 from django.db import transaction
 from apps.orders.models import Order, OrderItem
 from apps.payments.models import Payment, PaymentStatus, PaymentType
+from drf_spectacular.utils import extend_schema
+
 from .serializers import (
     OrderSerializer,
     PaymentSerializer,
@@ -17,6 +17,7 @@ from apps.accounts.models import Address, Profile
 from .serializers import AddressSerializer
 
 # ========== Checkout View ========== #
+@extend_schema(tags=["Checkout"])
 class CheckoutView(GenericAPIView):
     """نمایش خلاصه سفارش و ایجاد سفارش نهایی با انتخاب آدرس"""
     permission_classes = [permissions.IsAuthenticated]

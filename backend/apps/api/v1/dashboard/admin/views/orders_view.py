@@ -3,12 +3,14 @@ from rest_framework.decorators import action
 from rest_framework.response import Response
 from django.shortcuts import get_object_or_404
 from django.db import transaction
+from drf_spectacular.utils import extend_schema
 
 from apps.orders.models import Order, OrderItem, OrderStatus
 from ..serializers import OrderManagementSerializer
 from ..permissions import IsAdminOrSuperUser
 
 # ========== Order Management ViewSet ========== #
+@extend_schema(tags=['Order-Management'])
 class OrderManagementViewSet(viewsets.ModelViewSet):
     """
     ویوست برای مدیریت کامل سفارش‌ها توسط ادمین.

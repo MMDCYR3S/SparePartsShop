@@ -1,9 +1,14 @@
 from rest_framework import viewsets, filters
 from rest_framework.parsers import MultiPartParser, FormParser
+from drf_spectacular.utils import extend_schema
+
 from apps.home.models import Banner
 from ..serializers import BannerManagementSerializer
 from ..permissions import IsAdminOrSuperUser
 
+
+# ======= Banner Management ViewSet ======= #
+@extend_schema(tags=['Banner-Management'])
 class BannerManagementViewSet(viewsets.ModelViewSet):
     """
     ویوست برای مدیریت کامل بنرها توسط ادمین.
