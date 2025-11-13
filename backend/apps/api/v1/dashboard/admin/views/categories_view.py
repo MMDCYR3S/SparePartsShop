@@ -1,11 +1,14 @@
 from rest_framework import viewsets, status, filters
 from rest_framework.decorators import action
 from rest_framework.response import Response
+from drf_spectacular.utils import extend_schema
 
 from apps.shop.models import Category
 from ..serializers import CategoryManagementSerializer
 from ..permissions import IsAdminOrSuperUser
 
+# ======= Category Management ViewSet ======= #
+@extend_schema(tags=['Category-Management'])
 class CategoryManagementViewSet(viewsets.ModelViewSet):
     """
     ویوست برای مدیریت کامل دسته‌بندی‌ها توسط ادمین.

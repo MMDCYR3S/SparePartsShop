@@ -6,11 +6,14 @@ from rest_framework.response import Response
 from rest_framework.parsers import MultiPartParser, FormParser
 from django.shortcuts import get_object_or_404
 from django.db import transaction
+from drf_spectacular.utils import extend_schema
 
 from apps.shop.models import Product, ProductImage
 from ..serializers import ProductManagementSerializer, ProductImageSerializer
 from ..permissions import IsAdminOrSuperUser
 
+# ========= Product Management ViewSet ========= #
+@extend_schema(tags=['Product-Management'])
 class ProductManagementViewSet(viewsets.ModelViewSet):
     """
     ویوست برای مدیریت کامل محصولات توسط ادمین.

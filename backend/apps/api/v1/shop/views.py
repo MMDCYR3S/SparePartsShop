@@ -1,11 +1,14 @@
 from rest_framework import viewsets, filters
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
 from django_filters.rest_framework import DjangoFilterBackend
+from drf_spectacular.utils import extend_schema
+
 from apps.shop.models import Product
 from .serializers import ProductListSerializer, ProductDetailSerializer
 from .filters import ProductFilter
 
 # ========= Product ViewSet ========= #
+@extend_schema(tags=["Products"])
 class ProductViewSet(viewsets.ReadOnlyModelViewSet):
     """
     ویوست برای نمایش لیست محصولات با فیلترینگ و جستجو
