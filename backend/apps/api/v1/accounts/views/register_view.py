@@ -1,12 +1,8 @@
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.generics import GenericAPIView
-from drf_spectacular.utils import extend_schema
-
 from ..serializers import RegisterSerializer
 
-# ======== Register View ======== #
-@extend_schema(tags=["auth"])
 class RegisterView(GenericAPIView):
     """ ثبت نام کاربر با فیلد هایی که باید برای ایجاد کاربر ارسال شود """
     
