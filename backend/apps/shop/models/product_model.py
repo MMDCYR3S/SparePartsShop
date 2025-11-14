@@ -61,10 +61,10 @@ class Product(models.Model):
         """تعداد آیتم‌های تکی باقی‌مانده پس از بسته‌های کامل"""
         return self.stock_quantity % self.package_quantity if self.package_quantity > 0 else self.stock_quantity
 
-    def save(self):
+    def save(self, *args, **kwargs):
         """ ذخیره خودکار اسلاگ """
         self.slug = slugify(self.name)
-        super().save()
+        super().save(*args, **kwargs)
 
     class Meta:
         verbose_name = "محصول"
