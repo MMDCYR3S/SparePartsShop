@@ -2,6 +2,7 @@ from rest_framework import viewsets, status, filters
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from django.contrib.auth import get_user_model
+from drf_spectacular.utils import extend_schema
 
 from apps.shop.models import Car
 from ..serializers import CarManagementSerializer
@@ -10,6 +11,7 @@ from ..permissions import IsAdminOrSuperUser
 User = get_user_model()
 
 # ========= Car Management ViewSet ========= #
+@extend_schema(tags=['Car-Management'])
 class CarManagementViewSet(viewsets.ModelViewSet):
     """
     ویوست برای مدیریت کامل خودروها توسط ادمین.

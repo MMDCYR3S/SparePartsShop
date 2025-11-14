@@ -1,10 +1,15 @@
 from rest_framework import viewsets, status, filters
 from rest_framework.decorators import action
 from rest_framework.response import Response
+from drf_spectacular.utils import extend_schema
+
 from apps.home.models import Contact
 from ..serializers import ContactManagementSerializer
 from ..permissions import IsAdminOrSuperUser
 
+
+# ======= Contact Management ViewSet ======= #
+@extend_schema(tags=['Contact-Management'])
 class ContactManagementViewSet(viewsets.ModelViewSet):
     """
     ویوست برای مدیریت کامل پیام‌های تماس با ما توسط ادمین.

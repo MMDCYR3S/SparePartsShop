@@ -11,6 +11,7 @@ from ..serializers import UserManagementSerializer, AddressSerializer
 from ..permissions import IsAdminOrSuperUser
 
 # ========= User Management ViewSet ========= #
+@extend_schema(tags=['User-Management'])
 class UserManagementViewSet(viewsets.ModelViewSet):
     """
     ویوست برای مدیریت کامل کاربران توسط ادمین.

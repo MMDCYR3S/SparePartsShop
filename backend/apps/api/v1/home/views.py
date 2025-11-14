@@ -2,9 +2,12 @@ from rest_framework import generics, permissions
 from rest_framework.response import Response
 from rest_framework import status
 from apps.home.models import Contact, Banner
+from drf_spectacular.utils import extend_schema
+
 from .serializers import ContactSerializer, BannerSerializer
 
 # ====== Contact Create View ======= #
+@extend_schema(tags=["ContactUs"])
 class ContactCreateView(generics.CreateAPIView):
     """
     ویو برای ایجاد یک پیام جدید در فرم ارتباط با ما.
@@ -30,6 +33,7 @@ class ContactCreateView(generics.CreateAPIView):
         )
         
 # ====== Banner List View ======= #
+@extend_schema(tags=["Banner"])
 class BannerListView(generics.ListAPIView):
     """
     ویو برای نمایش لیست بنرها.
