@@ -15,11 +15,11 @@ class Category(models.Model):
     def __str__(self):
         return self.name
 
-    def save(self):
+    def save(self, *args, **kwargs):
         """ ذخیره اسلاگ به صورت انگلیسی """
         
         self.slug = slugify(self.name)
-        super().save()
+        super().save(*args, **kwargs)
         
     
     class Meta:
