@@ -1,0 +1,13 @@
+Django
+djangorestframework
+djangorestframework-simplejwt
+django-cors-headers
+django-debug-toolbar
+django-environ
+django-extensions
+django-filter
+django-taggit
+drf-spectacular
+markdown
+Pillow
+python-slugify
