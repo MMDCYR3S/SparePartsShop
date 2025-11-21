@@ -1,35 +1,49 @@
-import { useState } from 'react'
-import reactLogo from '../assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+// src/BASE_APP/App.jsx
+import React from 'react';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { AuthProvider } from '../context/AuthContext';
+import ProtectedRoute from '../components/ProtectedRoute';
+
+// Layouts
+import AdminLayout from '../app/admin/layout/AdminLayout';
+
+// Pages
+import AdminLoginPage from '../app/admin/pages/LoginPage';
+import Dashboard from '../app/admin/pages/dashboard/Dashboard';
+import TestPage from '../app/admin/pages/test/TestPage';
+import CategoryManagement from '../app/admin/pages/Categories/CategoryManagement';
 
 function App() {
-  const [count, setCount] = useState(0)
-
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+    <Router>
+      <AuthProvider>
+        <Routes>
+          {/* مسیر لاگین (عمومی) */}
+          <Route path="/admin/login" element={<AdminLoginPage />} />
+
+          {/* مسیرهای محافظت شده با لایوت ادمین */}
+          <Route path="/admin" element={
+            <ProtectedRoute>
+              <AdminLayout />
+            </ProtectedRoute>
+          }>
+
+            {/* مسیر های داخلی ادمین پنل */}
+            {/* مسیرهای داخلی relative به /admin هستن */}
+            <Route path="categories" element={<CategoryManagement />} />
+            <Route path="dashboard" element={<Dashboard />} />
+            <Route path="test" element={<TestPage />} />
+
+            {/* مسیر پیش‌فرض برای داشبورد */}
+            <Route path="" element={<Navigate to="dashboard" />} />
+          </Route>
+          
+          {/* مسیر اصلی سایت رو به پنل ادمین هدایت کن */}
+          <Route path="/" element={<Navigate to="/admin/dashboard" />} />
+        </Routes>
+      </AuthProvider>
+    </Router>
+  );
 }
 
-export default App
+export default App;
