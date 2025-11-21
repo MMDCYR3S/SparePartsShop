@@ -1,40 +1,43 @@
 // src/BASE_APP/App.jsx
 import React from 'react';
-import './App.css';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider } from '../context/AuthContext';
-import ProtectedRoute from '../components/ProtectedRoute'; // ۲. ایمپورت دروازه‌بان
+import ProtectedRoute from '../components/ProtectedRoute';
 
-// صفحات
+// Layouts
+import AdminLayout from '../app/admin/layout/AdminLayout';
+
+// Pages
 import AdminLoginPage from '../app/admin/pages/LoginPage';
-import Dashboard from '../app/admin/pages/dashboard/Dashboard'; // صفحه داشبوردی که قبلا ساختیم
+import Dashboard from '../app/admin/pages/dashboard/Dashboard';
+import TestPage from '../app/admin/pages/test/TestPage';
 
 function App() {
   return (
-    // ۳. کل اپلیکیشن رو داخل Provider بپیچون
-    <div className="App">
-      <Router>
-        <AuthProvider>
+    <Router>
+      <AuthProvider>
         <Routes>
           {/* مسیر لاگین (عمومی) */}
           <Route path="/admin/login" element={<AdminLoginPage />} />
 
-          {/* مسیرهای محافظت شده */}
-          <Route
-            path="/admin/dashboard"
-            element={
-              <ProtectedRoute>
-                <Dashboard />
-              </ProtectedRoute>
-            }
-          />
+          {/* مسیرهای محافظت شده با لایوت ادمین */}
+          <Route path="/admin" element={
+            <ProtectedRoute>
+              <AdminLayout />
+            </ProtectedRoute>
+          }>
+            {/* مسیرهای داخلی relative به /admin هستن */}
+            <Route path="dashboard" element={<Dashboard />} />
+            <Route path="test" element={<TestPage />} />
+            {/* مسیر پیش‌فرض برای داشبورد */}
+            <Route path="" element={<Navigate to="dashboard" />} />
+          </Route>
           
-          {/* مسیر پیش‌فرض: اگر کاربر وارد صفحه اصلی شد، ببرش به داشبورد */}
+          {/* مسیر اصلی سایت رو به پنل ادمین هدایت کن */}
           <Route path="/" element={<Navigate to="/admin/dashboard" />} />
         </Routes>
-    </AuthProvider>
-      </Router>
-      </div>
+      </AuthProvider>
+    </Router>
   );
 }
 

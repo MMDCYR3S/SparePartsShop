@@ -1,3 +1,0 @@
-from .car_model import Car
-from .category_model import Category
-from .product_model import Product, ProductImage
