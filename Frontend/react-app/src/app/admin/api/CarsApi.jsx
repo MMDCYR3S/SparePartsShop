@@ -4,13 +4,17 @@ import apiClient from "../../../api/apiClient";
 // ==================== عملیات خواندن (READ) ====================
 
 // ۱. دریافت لیست تمام ماشین‌ها
-export const getCars = async () => {
+// در CarsApi.jsx
+
+// تغییر این تابع برای پشتیبانی از سرچ و سورت
+export const getCars = async (params = {}) => {
   try {
-    const response = await apiClient.get("dashboard/admin/cars/");
+    // حالا پارامترهای search و ordering رو به سرور می‌فرسته
+    const response = await apiClient.get("dashboard/admin/cars/", { params });
     return response.data;
   } catch (error) {
     console.error("Error fetching cars data:", error);
-    throw error; // خطا رو به کامپوننت می‌فرستیم تا مدیریتش کنه
+    throw error;
   }
 };
 

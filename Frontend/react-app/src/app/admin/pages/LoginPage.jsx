@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import { useAuth } from "../../../context/AuthContext";
 import { adminLogin } from "../api/AuthApi";
 
+
 const AdminLoginPage = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -28,7 +29,7 @@ const AdminLoginPage = () => {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center min-w-screen">
+    <div className="flex flex-col items-center justify-center min-w-screen text-primary">
       <form
         onSubmit={handleSubmit}
         dir="rtl"
@@ -57,7 +58,7 @@ const AdminLoginPage = () => {
           />
         </div>
         {error && <p style={{ color: "red" }}>{error}</p>}
-        <button type="submit" disabled={loading}>
+        <button type="submit" disabled={loading} className="text-surface">
           {loading ? "در حال ورود..." : "ورود"}
         </button>
       </form>

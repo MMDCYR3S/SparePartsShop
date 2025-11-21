@@ -11,6 +11,7 @@ import AdminLayout from '../app/admin/layout/AdminLayout';
 import AdminLoginPage from '../app/admin/pages/LoginPage';
 import Dashboard from '../app/admin/pages/dashboard/Dashboard';
 import TestPage from '../app/admin/pages/test/TestPage';
+import CategoryManagement from '../app/admin/pages/Categories/CategoryManagement';
 
 function App() {
   return (
@@ -26,9 +27,13 @@ function App() {
               <AdminLayout />
             </ProtectedRoute>
           }>
+
+            {/* مسیر های داخلی ادمین پنل */}
             {/* مسیرهای داخلی relative به /admin هستن */}
+            <Route path="categories" element={<CategoryManagement />} />
             <Route path="dashboard" element={<Dashboard />} />
             <Route path="test" element={<TestPage />} />
+
             {/* مسیر پیش‌فرض برای داشبورد */}
             <Route path="" element={<Navigate to="dashboard" />} />
           </Route>
