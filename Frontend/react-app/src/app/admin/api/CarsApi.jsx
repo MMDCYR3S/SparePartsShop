@@ -1,5 +1,5 @@
 // src/app/admin/api/CarsApi.jsx
-import apiClient from "../../../api/apiClient";
+import apiClient from "@/api/apiClient";
 
 // ==================== عملیات خواندن (READ) ====================
 
