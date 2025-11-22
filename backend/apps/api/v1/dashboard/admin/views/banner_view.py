@@ -1,5 +1,5 @@
 from rest_framework import viewsets, filters
-from rest_framework.parsers import MultiPartParser, FormParser
+from rest_framework.parsers import MultiPartParser, FormParser, JSONParser
 from drf_spectacular.utils import extend_schema
 
 from apps.home.models import Banner
@@ -17,7 +17,7 @@ class BannerManagementViewSet(viewsets.ModelViewSet):
     queryset = Banner.objects.all().select_related('user')
     serializer_class = BannerManagementSerializer
     permission_classes = [IsAdminOrSuperUser]
-    parser_classes = [MultiPartParser, FormParser]
+    parser_classes = [MultiPartParser, FormParser, JSONParser]
     filter_backends = [filters.OrderingFilter]
     ordering_fields = ['order', 'created_at']
     ordering = ['-order']
