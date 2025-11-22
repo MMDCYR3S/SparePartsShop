@@ -24,7 +24,7 @@ class ProductManagementViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAdminOrSuperUser]
     filter_backends = [filters.SearchFilter, filters.OrderingFilter]
     search_fields = ['name', 'brand', 'part_code', 'category__name']
-    ordering_fields = ['name', 'price', 'stock_quantity', 'date_created']
+    ordering_fields = ['name', 'price', 'date_created']
     ordering = ['-id']
     parser_classes = [MultiPartParser, FormParser]
 

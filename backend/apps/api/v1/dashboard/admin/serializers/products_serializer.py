@@ -50,7 +50,7 @@ class ProductManagementSerializer(serializers.ModelSerializer):
         model = Product
         fields = [
             'id', 'name', 'slug', 'description', 'part_code', 'brand', 'country_of_origin',
-            'warranty', 'price', 'stock_quantity', 'package_quantity', 'allow_individual_sale',
+            'warranty', 'price', 'is_stock', 'allow_individual_sale',
             'is_active', 'category', 'category_name', 'compatible_cars', 'compatible_cars_info',
             'images'
         ]
