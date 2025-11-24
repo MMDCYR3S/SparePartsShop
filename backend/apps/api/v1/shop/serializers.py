@@ -24,13 +24,12 @@ class CategorySerializer(serializers.ModelSerializer):
 class ProductListSerializer(serializers.HyperlinkedModelSerializer):
     url_detail = serializers.HyperlinkedIdentityField(view_name='api:v1:product-detail')
     category_name = serializers.CharField(source='category.name', read_only=True)
-    is_in_stock = serializers.BooleanField(read_only=True)
     
     class Meta:
         model = Product
         fields = [
             'id', 'url_detail', 'name', 'brand', 'part_code', 
-            'price', 'category_name', 'is_in_stock', 'package_quantity'
+            'price', 'category_name', "is_stock"
         ]
 
 # ======= Product Detail Serializers ======= #
@@ -38,16 +37,12 @@ class ProductDetailSerializer(serializers.ModelSerializer):
     images = ProductImageSerializer(many=True, read_only=True)
     category = CategorySerializer(read_only=True)
     compatible_cars = CarSerializer(many=True, read_only=True)
-    is_in_stock = serializers.BooleanField(read_only=True)
-    package_count = serializers.IntegerField(read_only=True)
-    individual_items_available = serializers.IntegerField(read_only=True)
     
     class Meta:
         model = Product
         fields = [
             'id', 'name', 'description', 'part_code', 'brand', 
             'country_of_origin', 'warranty', 'price',
-            'stock_quantity', 'package_quantity', 'allow_individual_sale',
-            'is_in_stock', 'package_count', 'individual_items_available',
+            'is_stock', 'allow_individual_sale',
             'category', 'compatible_cars', 'images', 'is_active'
         ]

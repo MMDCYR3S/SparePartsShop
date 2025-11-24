@@ -18,7 +18,7 @@ class ProductSerializer(serializers.ModelSerializer):
     """ نمایش محصول مرتبط با آیتم سفارش """
     class Meta:
         model = Product
-        fields = ("id", "name", "part_code", "price", "stock_quantity", "warranty", "country_of_origin", "description", "category", "brand", "compatible_cars")
+        fields = ("id", "name", "part_code", "price", "is_stock", "warranty", "country_of_origin", "description", "category", "brand", "compatible_cars")
         
 
 # ========= Order Item Serializer ========= #
@@ -28,7 +28,7 @@ class OrderItemSerializer(serializers.ModelSerializer):
     
     class Meta:
         model = OrderItem
-        fields = ("product", "price_at_time_of_purchase", "quantity")
+        fields = ("product", "price_at_time_of_purchase")
         
     def get_product(self, obj):
         return {

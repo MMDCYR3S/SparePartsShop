@@ -64,13 +64,7 @@ class OrderManagementViewSet(viewsets.ModelViewSet):
             )
         
         with transaction.atomic():
-            orders_to_delete = self.get_queryset().filter(id__in=ids_to_delete)
-            for order in orders_to_delete:
-                for item in order.items.all():
-                    if order.status == OrderStatus.PENDING or order.status == OrderStatus.CANCELLED:
-                        item.product.quantity += item.quantity
-                        item.product.save()
-                        
+            orders_to_delete = self.get_queryset().filter(id__in=ids_to_delete)                        
             count, _ = orders_to_delete.delete()
 
         return Response(
@@ -100,18 +94,12 @@ class OrderManagementViewSet(viewsets.ModelViewSet):
             items_to_delete = order.items.filter(id__in=item_ids)
             if not items_to_delete.exists():
                 return Response({"error": "هیچ آیتم معتبری برای حذف یافت نشد."}, status=status.HTTP_404_NOT_FOUND)
-
-            # موجودی را برگردان و آیتم‌ها را حذف کن
-            for item in items_to_delete:
-                if order.status == OrderStatus.PENDING or order.status == OrderStatus.CANCELLED:
-                    item.product.stock_quantity += item.quantity
-                    item.product.save()
             
             deleted_count, _ = items_to_delete.delete()
 
             # محاسبه مجدد مبلغ کل سفارش
             new_total = sum(
-                item.price_at_time_of_purchase * item.quantity 
+                item.price_at_time_of_purchase
                 for item in order.items.all()
             )
             order.total_amount = new_total

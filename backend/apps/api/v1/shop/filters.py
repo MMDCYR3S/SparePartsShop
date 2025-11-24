@@ -25,7 +25,7 @@ class ProductFilter(django_filters.FilterSet):
     
     def filter_in_stock(self, queryset, name, value):
         if value:
-            return queryset.filter(stock_quantity__gt=0)
+            return queryset.filter(is_stock=True)
         return queryset
     
     def filter_car_make(self, queryset, name, value):

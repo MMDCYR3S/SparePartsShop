@@ -3,7 +3,7 @@
 from rest_framework import viewsets, status, filters
 from rest_framework.decorators import action
 from rest_framework.response import Response
-from rest_framework.parsers import MultiPartParser, FormParser
+from rest_framework.parsers import MultiPartParser, FormParser, JSONParser
 from django.shortcuts import get_object_or_404
 from django.db import transaction
 from drf_spectacular.utils import extend_schema
@@ -24,9 +24,9 @@ class ProductManagementViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAdminOrSuperUser]
     filter_backends = [filters.SearchFilter, filters.OrderingFilter]
     search_fields = ['name', 'brand', 'part_code', 'category__name']
-    ordering_fields = ['name', 'price', 'stock_quantity', 'date_created']
+    ordering_fields = ['name', 'price', 'date_created']
     ordering = ['-id']
-    parser_classes = [MultiPartParser, FormParser]
+    parser_classes = [MultiPartParser, FormParser, JSONParser]
 
     # ======== اکشن‌های گروهی (Bulk Actions) ========
 
