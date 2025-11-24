@@ -14,7 +14,8 @@ const ProductFormModal = ({ isOpen, onClose, productToEdit, onSuccess }) => {
     brand: "",
     country_of_origin: "",
     price: "",
-    stock_quantity: 0,
+    // stock_quantity: 0,
+        is_stock: true,    
     package_quantity: 1,
     description: "",
     warranty: "",
@@ -44,6 +45,8 @@ const ProductFormModal = ({ isOpen, onClose, productToEdit, onSuccess }) => {
       });
     }
   }, [productToEdit]);
+
+
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -91,6 +94,29 @@ const ProductFormModal = ({ isOpen, onClose, productToEdit, onSuccess }) => {
       setLoading(false);
     }
   };
+
+  const populateForm = (product) => {
+    setFormData({
+      name: product.name || "",
+      part_code: product.part_code || "",
+      category: product.category || "",
+      price: product.price ? parseInt(product.price) : "",
+      
+      is_stock: product.is_stock ?? true, // <-- دریافت وضعیت موجودی
+      // stock_quantity: product.stock_quantity || 0, // <-- دیگه لازم نیست
+
+      package_quantity: product.package_quantity || 1,
+      description: product.description || "",
+      brand: product.brand || "",
+      country_of_origin: product.country_of_origin || "",
+      warranty: product.warranty || "",
+      is_active: product.is_active ?? true,
+      allow_individual_sale: product.allow_individual_sale ?? true,
+      compatible_cars: product.compatible_cars || [],
+    });
+    setExistingImages(product.images || []);
+  };
+
 
   if (!isOpen) return null;
 
@@ -148,10 +174,30 @@ const ProductFormModal = ({ isOpen, onClose, productToEdit, onSuccess }) => {
             </div>
 
             {/* Field: Stock & Origin */}
-            <div>
-                <label className="block text-sm font-medium text-slate-700 mb-1">موجودی انبار</label>
-                <input type="number" name="stock_quantity" value={formData.stock_quantity} onChange={handleChange} className="w-full input-field" />
-            </div>
+<div className="flex items-center">
+  <label className={`w-full flex items-center justify-between p-3 rounded-xl border cursor-pointer transition-all ${formData.is_stock ? 'bg-emerald-50 border-emerald-200' : 'bg-red-50 border-red-200'}`}>
+    <div className="flex items-center gap-3">
+      <input 
+        type="checkbox" 
+        name="is_stock" 
+        checked={formData.is_stock} 
+        onChange={handleInputChange}
+        className="w-5 h-5 text-emerald-600 rounded focus:ring-emerald-500" 
+      />
+      <div>
+        <span className={`block text-sm font-bold ${formData.is_stock ? 'text-emerald-800' : 'text-red-800'}`}>
+          {formData.is_stock ? 'کالا موجود است' : 'کالا ناموجود است'}
+        </span>
+        <span className="text-xs text-gray-500">وضعیت انبار</span>
+      </div>
+    </div>
+    
+    {/* آیکون وضعیت */}
+    <div className={`p-2 rounded-full ${formData.is_stock ? 'bg-emerald-100 text-emerald-600' : 'bg-red-100 text-red-500'}`}>
+      <CubeIcon className="w-5 h-5" />
+    </div>
+  </label>
+</div>
             <div>
                 <label className="block text-sm font-medium text-slate-700 mb-1">کشور سازنده *</label>
                 <input name="country_of_origin" value={formData.country_of_origin} onChange={handleChange} className="w-full input-field" required />
