@@ -14,6 +14,7 @@ import TestPage from '../app/admin/pages/test/TestPage';
 import CategoryManagement from '../app/admin/pages/Categories/CategoryManagement';
 
 import ProductList from '../app/admin/pages/products/home/products_list/ProductList';
+import ProductDetail from '../app/admin/pages/products/product_view/ProductDetail';
 
 
 
@@ -37,6 +38,7 @@ function App() {
             <Route path="products" element={<ProductList />} />
             <Route path="categories" element={<CategoryManagement />} />
             <Route path="dashboard" element={<Dashboard />} />
+            <Route path="products/view/:id" element={<ProductDetail />} />
             <Route path="test" element={<TestPage />} />
 
             {/* مسیر پیش‌فرض برای داشبورد */}
