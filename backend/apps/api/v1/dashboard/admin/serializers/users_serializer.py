@@ -1,6 +1,8 @@
 from rest_framework import serializers
 from django.contrib.auth import get_user_model
+
 from apps.accounts.models import Profile, Address
+from apps.orders.models import Order
 
 User = get_user_model()
 
@@ -92,3 +94,30 @@ class UserManagementSerializer(serializers.ModelSerializer):
         instance.profile.save()
 
         return instance
+
+# ======= Order Summary Serializer (New) ======= #
+class UserOrderSummarySerializer(serializers.ModelSerializer):
+    """
+    سریالایزر خلاصه برای نمایش لیست سفارشات در پروفایل کاربر
+    """
+
+    class Meta:
+        model = Order
+        fields = [
+            'id', 
+            'status',
+            'order_date', 
+            'total_amount', 
+        ]
+
+# ======= User Detail Serializer ======= #
+class UserDetailSerializer(UserManagementSerializer):
+    """
+    سریالایزر مخصوص نمایش جزئیات کاربر (Retrieve).
+    همان اطلاعات مدیریتی را دارد به علاوه لیست سفارشات.
+    """
+    orders = UserOrderSummarySerializer(source='order_set', many=True, read_only=True)
+
+    class Meta(UserManagementSerializer.Meta):
+        fields = UserManagementSerializer.Meta.fields + ['orders']
+        

@@ -13,13 +13,21 @@ def update_payment_on_order_save(sender, instance, created, **kwargs):
     """
     payment, created_payment = Payment.objects.get_or_create(
         order=instance,
-        payment_type=instance.payment_type,
-        amount=instance.total_amount
+        defaults={
+            'payment_type': instance.payment_type,
+            'amount': instance.total_amount
+        }
     )
     
     if instance.status == OrderStatus.CANCELLED:
         payment.status = PaymentStatus.FAILED
     elif instance.status == OrderStatus.PENDING:
+        payment.status = PaymentStatus.PENDING
+    elif instance.status == OrderStatus.PROCESSING:
+        payment.status = PaymentStatus.PENDING
+    elif instance.status == OrderStatus.SHIPPED:
+        payment.status = PaymentStatus.PENDING
+    elif instance.status == OrderStatus.CONFIRMED:
         payment.status = PaymentStatus.PENDING
     else:
         payment.status = PaymentStatus.COMPLETED
