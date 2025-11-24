@@ -18,12 +18,11 @@ import {
   ArrowPathIcon,
   EyeIcon,
   BanknotesIcon,
-  CalendarDaysIcon,
   CreditCardIcon,
-  ExclamationTriangleIcon,
   TrashIcon,
   CheckCircleIcon,
-  XMarkIcon
+  XMarkIcon,
+  DocumentTextIcon // برای چک
 } from '@heroicons/react/24/outline';
 
 import LoadingSpinner from '@/components/LoadingSpinner';
@@ -64,6 +63,17 @@ const StatusBadge = ({ status, display }) => {
   );
 };
 
+// بج نوع پرداخت (جدید)
+const PaymentBadge = ({ type, display }) => {
+  const isCheck = type === 'check';
+  return (
+    <div className={`flex items-center gap-1.5 px-2 py-1 rounded-md text-xs font-bold border w-fit ${isCheck ? 'bg-purple-50 text-purple-700 border-purple-100' : 'bg-emerald-50 text-emerald-700 border-emerald-100'}`}>
+      {isCheck ? <DocumentTextIcon className="w-3.5 h-3.5" /> : <BanknotesIcon className="w-3.5 h-3.5" />}
+      {display || (isCheck ? 'چکی' : 'نقدی')}
+    </div>
+  );
+};
+
 const OrdersDashboard = () => {
   const navigate = useNavigate();
 
@@ -77,6 +87,7 @@ const OrdersDashboard = () => {
   const [ordering, setOrdering] = useState('-order_date');
   const [currentPage, setCurrentPage] = useState(1);
   const [statusFilter, setStatusFilter] = useState('');
+  const [paymentFilter, setPaymentFilter] = useState(''); // فیلتر جدید: نوع پرداخت
 
   // Bulk Actions State
   const [selectedIds, setSelectedIds] = useState(new Set());
@@ -123,7 +134,16 @@ const OrdersDashboard = () => {
 
   // ==================== Client Logic ====================
   const filteredOrders = orders.filter(order => {
+    // 1. Status Filter
     if (statusFilter && order.status !== statusFilter) return false;
+    
+    // 2. Payment Type Filter (NEW)
+    if (paymentFilter) {
+      const pType = order.payment?.payment_type;
+      if (paymentFilter === 'check' && pType !== 'check') return false;
+      if (paymentFilter === 'cash' && pType !== 'cash') return false;
+    }
+    
     return true;
   });
 
@@ -137,8 +157,6 @@ const OrdersDashboard = () => {
   // ==================== Bulk Handlers ====================
   const handleSelectAll = (e) => {
     if (e.target.checked) {
-      // Select only visible orders (or all, depending on UX preference)
-      // Here selecting ALL filtered orders
       setSelectedIds(new Set(filteredOrders.map(o => o.id)));
     } else {
       setSelectedIds(new Set());
@@ -212,7 +230,7 @@ const OrdersDashboard = () => {
       <div className="bg-white p-4 rounded-2xl shadow-sm border border-gray-100 flex flex-col lg:flex-row gap-4 justify-between items-center min-h-[76px]">
         
         {selectedIds.size > 0 ? (
-          // Bulk Actions Toolbar (Active State)
+          // Bulk Actions Toolbar
           <div className="w-full flex items-center justify-between animate-fade-in bg-blue-50 p-2 rounded-xl border border-blue-100">
              <div className="flex items-center gap-3">
                <span className="bg-blue-100 text-blue-700 px-3 py-1.5 rounded-lg font-bold text-sm">
@@ -258,6 +276,22 @@ const OrdersDashboard = () => {
             </div>
 
             <div className="flex flex-wrap items-center gap-3 w-full lg:w-auto justify-end">
+               
+               {/* Payment Type Filter (New) */}
+               <div className="relative">
+                 <select 
+                   value={paymentFilter}
+                   onChange={(e) => { setPaymentFilter(e.target.value); setCurrentPage(1); }}
+                   className="appearance-none bg-white border border-gray-200 text-gray-700 py-2.5 pr-4 pl-10 rounded-xl focus:outline-none focus:ring-2 focus:ring-accent text-sm font-medium cursor-pointer"
+                 >
+                   <option value="">همه پرداخت‌ها</option>
+                   <option value="cash">فقط نقدی</option>
+                   <option value="check">فقط چکی</option>
+                 </select>
+                 <CreditCardIcon className="w-5 h-5 text-gray-400 absolute left-3 top-2.5 pointer-events-none" />
+               </div>
+
+               {/* Status Filter */}
                <div className="relative">
                  <select 
                    value={statusFilter}
@@ -267,7 +301,6 @@ const OrdersDashboard = () => {
                    <option value="">همه وضعیت‌ها</option>
                    <option value="pending">در انتظار</option>
                    <option value="confirmed">تایید شده</option>
-                   <option value="processing">در حال پردازش</option>
                    <option value="shipped">ارسال شده</option>
                    <option value="delivered">تحویل شده</option>
                    <option value="cancelled">لغو شده</option>
@@ -275,6 +308,7 @@ const OrdersDashboard = () => {
                  <FunnelIcon className="w-5 h-5 text-gray-400 absolute left-3 top-2.5 pointer-events-none" />
                </div>
 
+               {/* Sort */}
                <div className="relative">
                  <select 
                    value={ordering}
@@ -315,6 +349,7 @@ const OrdersDashboard = () => {
                   <th className="px-6 py-4 text-xs font-bold text-gray-500 uppercase">شناسه</th>
                   <th className="px-6 py-4 text-xs font-bold text-gray-500 uppercase">مشتری</th>
                   <th className="px-6 py-4 text-xs font-bold text-gray-500 uppercase">وضعیت</th>
+                  <th className="px-6 py-4 text-xs font-bold text-gray-500 uppercase">نوع پرداخت</th>
                   <th className="px-6 py-4 text-xs font-bold text-gray-500 uppercase">تاریخ</th>
                   <th className="px-6 py-4 text-xs font-bold text-gray-500 uppercase">مبلغ کل</th>
                   <th className="px-6 py-4 text-center text-xs font-bold text-gray-500 uppercase">عملیات</th>
@@ -341,6 +376,12 @@ const OrdersDashboard = () => {
                         </div>
                       </td>
                       <td className="px-6 py-4"><StatusBadge status={order.status} display={order.status_display} /></td>
+                      <td className="px-6 py-4">
+                        <PaymentBadge 
+                          type={order.payment?.payment_type} 
+                          display={order.payment?.payment_type_display} 
+                        />
+                      </td>
                       <td className="px-6 py-4 text-sm text-gray-600 dir-ltr">{formatDate(order.order_date)}</td>
                       <td className="px-6 py-4 font-bold text-primary text-sm">{formatPrice(order.total_amount)} <span className="text-xs text-gray-400">تومان</span></td>
                       <td className="px-6 py-4 text-center">
