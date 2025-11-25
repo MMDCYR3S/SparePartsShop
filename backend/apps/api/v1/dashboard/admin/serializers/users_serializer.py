@@ -54,14 +54,9 @@ class UserManagementSerializer(serializers.ModelSerializer):
         }
         password = validated_data.pop('password')
 
-        # ایجاد کاربر با استفاده از متد create_user برای هش کردن رمز عبور
-        user = User.objects.create_user(**validated_data)
+        user = User.objects.create_user(password=password,**validated_data)
         user.set_password(password)
         user.save()
-
-        # ایجاد پروفایل کاربر
-        Profile.objects.create(user=user, **profile_data)
-
         return user
 
     def update(self, instance, validated_data):
