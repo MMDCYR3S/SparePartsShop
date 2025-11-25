@@ -24,6 +24,13 @@ import ProductForm from "../app/admin/pages/products/new_product/ProductForm";
 
 import OrdersDashboard from "../app/admin/pages/orders/OrdersDashboard";
 import OrderDetail from "../app/admin/pages/orders/order/OrderDetail";
+import OrderForm from "../app/admin/pages/orders/new/OrderForm";
+
+
+
+import UserManagement from "../app/admin/pages/users/UserManagement";
+
+
 
 function App() {
   return (
@@ -53,6 +60,8 @@ function App() {
             <Route path="test" element={<TestPage />} />
             <Route path="orders" element={<OrdersDashboard />} />
             <Route path="orders/view/:id" element={<OrderDetail />} />
+            <Route path="orders/new" element={<OrderForm />} />
+            <Route path="users" element={<UserManagement />} />
             {/* مسیر پیش‌فرض برای داشبورد */}
             <Route path="" element={<Navigate to="dashboard" />} />
           </Route>
