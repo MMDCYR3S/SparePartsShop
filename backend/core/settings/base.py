@@ -25,13 +25,13 @@ env = environ.Env(
 )
 
 # Determine which environment file to use
-environment = os.environ.get('DJANGO_ENV', 'development')
+environment = os.environ.get('DJANGO_ENV', 'production')
 
 if environment == 'production':
     # In production, we rely on environment variables
     pass
-elif environment == 'development':
-    env_file = os.path.join(BASE_DIR, 'env/.env.dev')
+elif environment == 'producton':
+    env_file = os.path.join(BASE_DIR, 'env/.env.prod')
     environ.Env.read_env(env_file)
 else:
     env_file = os.path.join(BASE_DIR, 'env/.env.dev')
