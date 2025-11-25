@@ -11,3 +11,6 @@ drf-spectacular
 markdown
 Pillow
 python-slugify
+gunicorn
+psycopg2-binary
+whitenoise
