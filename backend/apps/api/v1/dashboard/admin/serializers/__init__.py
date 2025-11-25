@@ -1,4 +1,4 @@
-from .users_serializer import UserManagementSerializer, AddressSerializer
+from .users_serializer import UserManagementSerializer, AddressSerializer, UserDetailSerializer
 from .products_serializer import ProductManagementSerializer, ProductImageSerializer
 from .cars_serializer import CarManagementSerializer
 from .categories_serializer import CategoryManagementSerializer
