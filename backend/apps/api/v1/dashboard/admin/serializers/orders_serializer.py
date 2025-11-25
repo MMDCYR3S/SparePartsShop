@@ -74,7 +74,7 @@ class OrderManagementSerializer(serializers.ModelSerializer):
         
         order = Order.objects.create(**validated_data)
         
-        total_amout = 0
+        total_amount = 0
         
         for item_data in items_data:
             product = Product.objects.get(id=item_data['product_id'])
