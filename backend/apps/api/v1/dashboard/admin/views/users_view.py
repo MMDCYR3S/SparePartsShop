@@ -7,7 +7,7 @@ from django.db import transaction
 from drf_spectacular.utils import extend_schema
 
 from apps.accounts.models import User, Address
-from ..serializers import UserManagementSerializer, AddressSerializer
+from ..serializers import UserManagementSerializer, UserDetailSerializer
 from ..permissions import IsAdminOrSuperUser
 
 # ========= User Management ViewSet ========= #
@@ -22,9 +22,28 @@ class UserManagementViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAdminOrSuperUser]
     filter_backends = [filters.SearchFilter, filters.OrderingFilter]
     search_fields = ['id', 'username', 'email', 'profile__first_name', 'profile__last_name']
-    ordering_fields = ['id', 'username', 'date_joined']
-    ordering = ['-date_joined']
+    ordering_fields = ['id', 'username', 'created_date']
+    ordering = ['-created_date']
     parser_classes = [MultiPartParser, FormParser, JSONParser]
+
+    def get_queryset(self):
+        """
+        بهینه‌سازی کوئری‌ها بر اساس اکشن.
+        """
+        queryset = User.objects.all().select_related('profile')
+        if self.action == 'retrieve':
+            queryset = queryset.prefetch_related('order_set', 'address_set')
+        return queryset
+
+    def get_serializer_class(self):
+        """
+        تغییر داینامیک سریالایزر.
+        - برای نمایش جزئیات (Detail): UserDetailSerializer (شامل سفارشات)
+        - برای سایر موارد (List, Create, Update): UserManagementSerializer
+        """
+        if self.action == 'retrieve':
+            return UserDetailSerializer
+        return UserManagementSerializer
 
     @extend_schema(
         # مشخص می‌کند که بدنه درخواست یک لیست از آبجکت‌های کاربر است
