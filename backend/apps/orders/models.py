@@ -25,7 +25,7 @@ class Order(models.Model):
     status = models.CharField(max_length=20, choices=OrderStatus.choices, default=OrderStatus.PENDING, verbose_name="وضعیت سفارش")
     order_date = models.DateTimeField(auto_now_add=True, verbose_name="تاریخ سفارش")
     shipping_address = models.TextField(verbose_name="آدرس ارسال")
-    total_amount = models.DecimalField(max_digits=12, decimal_places=0, verbose_name="مبلغ کل")
+    total_amount = models.DecimalField(max_digits=12, decimal_places=0, verbose_name="مبلغ کل", default=0)
     payment_type = models.CharField(
         max_length=20, 
         choices=PaymentType.choices, 
