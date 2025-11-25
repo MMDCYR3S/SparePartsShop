@@ -1,15 +1,10 @@
 from rest_framework import serializers
-from django.db.models import Q, Sum
-from django.utils import timezone
 
-from apps.accounts.models import Profile, User
+from apps.accounts.models import User
 from apps.home.models import Contact
-from apps.orders.models import Order, OrderItem, OrderStatus
-from apps.shop.models import Product, Car
-from apps.payments.models import Payment, PaymentStatus
+from apps.orders.models import Order
 
 # ======== Recent User Serializer ======== #
-
 class RecentUserSerializer(serializers.ModelSerializer):
     """سریالایزر ساده برای نمایش کاربران اخیر"""
     class Meta:
