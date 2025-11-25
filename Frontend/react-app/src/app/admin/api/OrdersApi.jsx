@@ -82,7 +82,8 @@ export const getOrderById = async (id) => {
     const response = await apiClient.get(`dashboard/admin/orders/${id}/`);
     return response.data;
   } catch (error) {
-    throw handleApiError(error, `getOrderById(${id})`);
+    console.error(`Error fetching order ${id}:`, error);
+    throw error;
   }
 };
 
@@ -100,12 +101,13 @@ export const createOrder = async (orderData) => {
 };
 
 // ۴. ویرایش کامل سفارش (PUT)
-export const updateOrder = async (id, orderData) => {
+export const updateOrder = async (id, data) => {
   try {
-    const response = await apiClient.put(`dashboard/admin/orders/${id}/`, orderData);
+    const response = await apiClient.patch(`dashboard/admin/orders/${id}/`, data);
     return response.data;
   } catch (error) {
-    throw handleApiError(error, `updateOrder(${id})`);
+    console.error(`Error updating order ${id}:`, error);
+    throw error;
   }
 };
 

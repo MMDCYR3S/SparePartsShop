@@ -67,35 +67,43 @@ const handleStatusChange = async (newStatus) => {
     
     setUpdating(true);
     try {
-      // 💡 راه حل: بازسازی دیتای آیتم‌ها برای راضی کردن بکند
-      // بکند انتظار داره items_data رو بگیره (طبق داکیومنت Swagger برای PUT/POST)
-      // پس ما همونو براش میفرستیم، حتی تو PATCH
-      
+      // ساختار صحیح برای جلوگیری از دو برابر شدن:
+      // ارسال id خود آیتم باعث میشه جنگو بفهمه این آیتم قدیمیه و جدید نسازه.
       const itemsPayload = order.items.map(item => ({
+        id: item.id, // <--- کلید طلایی: این خط جلوی دو برابر شدن رو میگیره
         product_id: item.product.id,
-        // اگر تعداد یا قیمت هم لازم بود اینجا اضافه میکنیم، ولی طبق داکیومنت فقط product_id کافیه
-        // اما چون این PATCH هست، ممکنه فقط product_id کافی باشه.
+        quantity: item.quantity,
+        price: item.price // اگر بکند قیمت رو هم میخواد (معمولا برای امنیت سمت سرور ایگنور میشه ولی بودنش ضرر نداره)
       }));
 
       const payload = { 
         status: newStatus,
-        // این خط رو اضافه میکنیم تا ارور "حداقل یک آیتم" رفع بشه:
-        items_data: itemsPayload 
+        items_data: itemsPayload, // الان هم آیتم‌ها رو داریم (رفع ارور 400) هم ID دارن (رفع باگ دو برابر شدن)
+        // جهت اطمینان، مقادیر اجباری دیگه رو هم میفرستیم که اگر سریالایزر گیر داد، پاس بشه
+        user: order.user,
+        total_amount: order.total_amount,
+        shipping_address: order.shipping_address
       };
 
-      console.log("Sending Payload:", payload); // برای دیباگ
+      console.log("Sending Payload:", payload);
 
       const updatedOrder = await patchOrder(id, payload);
       setOrder(updatedOrder);
-      // alert('وضعیت سفارش آپدیت شد');
 
     } catch (err) {
       console.error("Update Error:", err);
-      // نمایش ارور به کاربر
       if (err.response && err.response.data) {
+         // نمایش دقیق دیتیل ارور برای دیباگ بهتر
+         console.log("Error Details:", err.response.data);
          const serverError = err.response.data;
-         const msg = serverError.non_field_errors ? serverError.non_field_errors[0] : JSON.stringify(serverError);
-         alert(`خطای سرور: ${msg}`);
+         
+         // اگر ارور داخل items_data بود
+         if (serverError.items_data) {
+            alert(`خطا در آیتم‌ها: ${JSON.stringify(serverError.items_data)}`);
+         } else {
+            const msg = serverError.non_field_errors ? serverError.non_field_errors[0] : JSON.stringify(serverError);
+            alert(`خطای سرور: ${msg}`);
+         }
       } else {
          alert('خطا در تغییر وضعیت: ' + err.message);
       }
