@@ -21,9 +21,7 @@ COPY requirements.txt /app/requirements.txt
 # ۲. نصب پکیج‌ها با استفاده از میرور آروان (برای همه سرورهای ایران کار می‌کند)
 # دستور --trusted-host بسیار مهم است تا گیر SSL ندهد
 RUN pip install --no-cache-dir -r requirements.txt \
-    --default-timeout=1000 \
-    -i https://mirror.arvancloud.ir/pypi/simple \
-    --trusted-host mirror.arvancloud.ir
+    --default-timeout=1000
 # ------------------
 
 COPY . /app/
