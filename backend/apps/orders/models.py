@@ -49,11 +49,10 @@ class OrderItem(models.Model):
     """
     order = models.ForeignKey(Order, on_delete=models.CASCADE, related_name='items', verbose_name="سفارش")
     product = models.ForeignKey(Product, on_delete=models.PROTECT, verbose_name="محصول")
-    quantity = models.PositiveIntegerField(verbose_name="تعداد")
     price_at_time_of_purchase = models.DecimalField(max_digits=10, decimal_places=0, verbose_name="قیمت هنگام خرید")
 
     def __str__(self):
-        return f"{self.quantity} x {self.product.name} in Order {self.order.id}"
+        return f"{self.product.name} in Order {self.order.id}"
 
     class Meta:
         verbose_name = "آیتم سفارش"

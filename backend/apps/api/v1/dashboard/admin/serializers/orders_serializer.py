@@ -23,22 +23,8 @@ class OrderItemSerializer(serializers.ModelSerializer):
     
     class Meta:
         model = OrderItem
-        fields = ['id', 'product', 'product_id', 'quantity', 'price_at_time_of_purchase']
+        fields = ['id', 'product', 'product_id', 'price_at_time_of_purchase']
         read_only_fields = ['price_at_time_of_purchase']
-
-    def validate_quantity(self, value):
-            """بررسی می‌کند که تعداد درخواستی از موجودی محصول بیشتر نباشد."""
-            product_id = self.initial_data.get('product_id')
-            if product_id:
-                try:
-                    product = Product.objects.get(id=product_id)
-                    if value > product.stock_quantity:
-                        raise serializers.ValidationError(
-                            f"تعداد درخواستی ({value}) از موجودی محصول ({product.stock_quantity}) بیشتر است."
-                        )
-                except Product.DoesNotExist:
-                    raise serializers.ValidationError("محصول انتخاب شده معتبر نیست.")
-            return value
 
 # ========= Payment Serializer ========= #
 class PaymentSerializer(serializers.ModelSerializer):
@@ -97,15 +83,12 @@ class OrderManagementSerializer(serializers.ModelSerializer):
             OrderItem.objects.create(
                 order=order,
                 product=product,
-                quantity=item_data['quantity'],
                 price_at_time_of_purchase=price_at_time
             )
-            
-            # کاهش موجودی محصول
-            product.stock_quantity -= item_data['quantity']
+
             product.save()
             
-            total_amount += price_at_time * item_data['quantity']
+            total_amount += price_at_time
         
         # به‌روزرسانی مبلغ کل سفارش
         order.total_amount = total_amount
@@ -127,7 +110,6 @@ class OrderManagementSerializer(serializers.ModelSerializer):
             # بازگرداندن موجودی قدیمی محصول
             old_items = instance.items.all()
             for item in old_items:
-                item.product.stock_quantity += item.quantity
                 item.product.save()
             
             # ایجاد آیتم‌های جدید
@@ -139,17 +121,12 @@ class OrderManagementSerializer(serializers.ModelSerializer):
                 OrderItem.objects.create(
                     order=instance,
                     product=product,
-                    quantity=item_data['quantity'],
                     price_at_time_of_purchase=price_at_time
                 )
                 
-                product.stock_quantity -= item_data['quantity']
                 product.save()
                 
-                total_amount += price_at_time * item_data['quantity']
-                product.save()
-                
-                total_amount += price_at_time * item_data['quantity']
+                total_amount += price_at_time
             
             # به‌روزرسانی مبلغ کل سفارش
             instance.total_amount = total_amount

@@ -38,7 +38,7 @@ class CheckoutView(GenericAPIView):
         address_serializer = AddressSerializer(addresses, many=True)
         
         # محاسبه مجموع قیمت
-        total_amount = sum(item.product.price * item.quantity for item in cart.items.all())
+        total_amount = sum(item.product.price for item in cart.items.all())
         
         # آماده‌سازی داده‌ها برای نمایش
         cart_data = {
@@ -51,8 +51,7 @@ class CheckoutView(GenericAPIView):
                         "brand": item.product.brand,
                         "price": item.product.price,
                     },
-                    "quantity": item.quantity,
-                    "total_price": item.product.price * item.quantity
+                    "total_price": item.product.price
                 }
                 for item in cart.items.all()
             ],
@@ -87,7 +86,7 @@ class CheckoutView(GenericAPIView):
             )
             
             # محاسبه مجموع قیمت
-            total_amount = sum(item.product.price * item.quantity for item in cart.items.all())
+            total_amount = sum(item.product.price for item in cart.items.all())
             
             try:
                 with transaction.atomic():
@@ -104,11 +103,9 @@ class CheckoutView(GenericAPIView):
                         OrderItem.objects.create(
                             order=order,
                             product=cart_item.product,
-                            quantity=cart_item.quantity,
                             price_at_time_of_purchase=cart_item.product.price
                         )
                         product = cart_item.product
-                        product.stock_quantity -= cart_item.quantity
                         product.save()
                     
                     # خالی کردن سبد خرید
