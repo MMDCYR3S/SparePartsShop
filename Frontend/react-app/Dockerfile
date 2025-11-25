@@ -1,22 +1,16 @@
-FROM node:20-alpine
+FROM node:20-alpine AS build
 
-# Set working directory
 WORKDIR /app
-
-# Copy package.json and package-lock.json
 COPY package*.json ./
-
-# Install dependencies
 RUN npm ci --silent
-
-# Copy all files
 COPY . .
-
-# Build the app
+# این دستور پوشه dist را می‌سازد
 RUN npm run build
 
-# Expose port
-EXPOSE 3000 5173
-
-# Start the app
-CMD ["npm", "run", "dev", "--", "--host"]
+# --- مرحله دوم: سرو کردن با Nginx ---
+FROM nginx:alpine
+# کپی کردن فایل‌های ساخته شده در مرحله قبل به پوشه Nginx
+COPY --from=build /app/dist /usr/share/nginx/html
+# باز کردن پورت 80
+EXPOSE 80
+CMD ["nginx", "-g", "daemon off;"]
