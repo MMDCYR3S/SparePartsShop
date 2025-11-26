@@ -11,6 +11,7 @@ import {
   XMarkIcon
 } from '@heroicons/react/24/outline';
 
+
 const Sidebar = ({ isOpen, closeSidebar }) => {
   const navItems = [
     { name: 'داشبورد', path: '/admin/dashboard', icon: <HomeIcon className="w-5 h-5" /> },
@@ -18,8 +19,9 @@ const Sidebar = ({ isOpen, closeSidebar }) => {
     { name: 'محصولات', path: '/admin/products', icon: <CubeIcon className="w-5 h-5" /> },
     { name: 'سفارشات', path: '/admin/orders', icon: <ShoppingCartIcon className="w-5 h-5" /> },
     { name: 'کاربران', path: '/admin/users', icon: <UsersIcon className="w-5 h-5" /> },
-    { name: 'تنظیمات', path: '/admin/settings', icon: <Cog6ToothIcon className="w-5 h-5" /> },
-    { name: 'تست API', path: '/admin/test', icon: <BeakerIcon className="w-5 h-5" /> },
+    { name: 'تنظیمات', path: '/admin/banners', icon: <Cog6ToothIcon className="w-5 h-5" /> },
+    // { name: 'تست API', path: '/admin/test', icon: <BeakerIcon className="w-5 h-5" /> },
+    { name: 'پرداختها', path: '/admin/payments', icon: <BeakerIcon className="w-5 h-5" /> },
   ];
 
   return (

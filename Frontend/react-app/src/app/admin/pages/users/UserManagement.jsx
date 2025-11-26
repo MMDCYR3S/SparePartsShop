@@ -5,11 +5,15 @@ import UserFormModal from "./components/UserFormModal";
 import { 
   UserPlusIcon, MagnifyingGlassIcon, PencilSquareIcon, TrashIcon, 
   ShieldCheckIcon, CheckCircleIcon, XCircleIcon, XMarkIcon, 
-  ArrowsUpDownIcon, ChevronLeftIcon, ChevronRightIcon
+  ArrowsUpDownIcon, ChevronLeftIcon, ChevronRightIcon , EyeIcon 
 } from "@heroicons/react/24/outline";
 import LoadingSpinner from "@/components/LoadingSpinner";
+import { useNavigate } from "react-router-dom";
 
 const UserManagement = () => {
+
+const navigate = useNavigate(); // <--- این خط رو اضافه کن
+
   const { 
     users, loading, error, filters, setFilters, paginationInfo, actions, refresh 
   } = useUsers();
@@ -254,17 +258,38 @@ const UserManagement = () => {
                                 )}
                             </td>
 
-                            {/* Actions */}
-                            <td className="px-6 py-4 text-center">
-                                <div className="flex items-center justify-center gap-2 opacity-50 group-hover:opacity-100 transition-opacity">
-                                    <button onClick={() => openModal(user)} className="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors" title="ویرایش">
-                                        <PencilSquareIcon className="w-5 h-5" />
-                                    </button>
-                                    <button onClick={() => actions.removeUser(user.id)} className="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors" title="حذف">
-                                        <TrashIcon className="w-5 h-5" />
-                                    </button>
-                                </div>
-                            </td>
+{/* Actions */}
+<td className="px-6 py-4 text-center">
+    <div className="flex items-center justify-center gap-2 opacity-50 group-hover:opacity-100 transition-opacity">
+        
+        {/* دکمه مشاهده (جدید) */}
+        <button 
+            onClick={() => navigate(`/admin/users/view/${user.id}`)} 
+            className="p-2 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-lg transition-colors" 
+            title="مشاهده جزئیات"
+        >
+            <EyeIcon className="w-5 h-5" />
+        </button>
+
+        {/* دکمه ویرایش */}
+        <button 
+            onClick={() => openModal(user)} 
+            className="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors" 
+            title="ویرایش"
+        >
+            <PencilSquareIcon className="w-5 h-5" />
+        </button>
+
+        {/* دکمه حذف */}
+        <button 
+            onClick={() => actions.removeUser(user.id)} 
+            className="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors" 
+            title="حذف"
+        >
+            <TrashIcon className="w-5 h-5" />
+        </button>
+    </div>
+</td>
                             </tr>
                         ))
                     )}

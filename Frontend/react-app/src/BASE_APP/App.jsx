@@ -29,8 +29,11 @@ import OrderForm from "../app/admin/pages/orders/new/OrderForm";
 
 
 import UserManagement from "../app/admin/pages/users/UserManagement";
+import UserDetail from "../app/admin/pages/users/userDetail";
 
+import BannerManagement from "../app/admin/pages/settings/banner/BannerManagement";
 
+import PaymentManagement from "../app/admin/pages/payments/PaymentManagement";
 
 function App() {
   return (
@@ -62,6 +65,9 @@ function App() {
             <Route path="orders/view/:id" element={<OrderDetail />} />
             <Route path="orders/new" element={<OrderForm />} />
             <Route path="users" element={<UserManagement />} />
+            <Route path="users/view/:id" element={<UserDetail />} />
+            <Route path="banners" element={<BannerManagement />} />
+            <Route path="payments" element={<PaymentManagement />} />
             {/* مسیر پیش‌فرض برای داشبورد */}
             <Route path="" element={<Navigate to="dashboard" />} />
           </Route>
