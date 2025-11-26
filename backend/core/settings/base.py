@@ -21,7 +21,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent.parent
 
 # Environment variables setup
 env = environ.Env(
-    DEBUG=(bool, False)
+    DEBUG=(bool, True)
 )
 
 # Determine which environment file to use
