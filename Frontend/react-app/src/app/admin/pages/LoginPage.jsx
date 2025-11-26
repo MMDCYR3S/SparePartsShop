@@ -58,7 +58,7 @@ const AdminLoginPage = () => {
           />
         </div>
         {error && <p style={{ color: "red" }}>{error}</p>}
-        <button type="submit" disabled={loading} className="text-surface">
+        <button type="submit" disabled={loading} className="text-surface bg-primary py-2">
           {loading ? "در حال ورود..." : "ورود"}
         </button>
       </form>
