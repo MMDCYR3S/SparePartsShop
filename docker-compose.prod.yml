@@ -33,7 +33,7 @@ services:
     build: ./Frontend/react-app
     ports:
       # پورت 80 (پورت پیش‌فرض وب) را وصل می‌کنیم به کانتینر
-      - "80:80"
+      - "8080:80"
     depends_on:
       - backend
     restart: always
