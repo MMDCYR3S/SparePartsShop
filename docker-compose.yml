@@ -1,0 +1,48 @@
+version: '3.8'
+
+services:
+  db:
+    image: postgres:13
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+    environment:
+      POSTGRES_USER: spareparts_user
+      POSTGRES_PASSWORD: spareparts_password
+      POSTGRES_DB: spareparts_db
+      
+  backend:
+    build: ./backend
+    command: >
+      sh -c "python manage.py migrate &&
+             python manage.py collectstatic --noinput &&
+             gunicorn core.wsgi:application --bind 0.0.0.0:8010"
+    volumes:
+      - ./backend:/app
+      - static_volume:/app/static
+      - media_volume:/app/media
+    ports:
+      - "8010:8010"
+    environment:
+      DEBUG: 0
+      DATABASE_URL: postgres://spareparts_user:spareparts_password@db:5432/spareparts_db
+    depends_on:
+      - db
+      
+  frontend:
+    build: ./Frontend/react-app
+    command: npm run dev -- --host 0.0.0.0 --port 3010
+    volumes:
+      - ./Frontend/react-app:/app
+      - /app/node_modules
+    ports:
+      - "3010:3010"
+    environment:
+      - NODE_ENV=production
+      - WATCHPACK_POLLING=true
+    depends_on:
+      - backend
+
+volumes:
+  postgres_data:
+  static_volume:
+  media_volume:

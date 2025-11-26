@@ -1,0 +1,42 @@
+version: '3.8'
+
+services:
+  db:
+    image: postgres:17
+    volumes:
+      - postgres_data_prod:/var/lib/postgresql/data/
+    environment:
+      POSTGRES_USER: spareparts_user
+      POSTGRES_PASSWORD: spareparts_password
+      POSTGRES_DB: spareparts_db
+    restart: always
+
+  backend:
+    build: ./backend
+    # استفاده از Gunicorn برای محیط واقعی
+    command: gunicorn core.wsgi:application --bind 0.0.0.0:8010
+    volumes:
+      - ./backend:/app
+    ports:
+      - "8010:8010"
+    environment:
+      # مهم: دیباگ حتما باید خاموش باشد
+      DEBUG: 0
+      # آی‌پی سرور خودت را اینجا بنویس
+      ALLOWED_HOSTS: "localhost,127.0.0.1,87.107.108.77"
+      DATABASE_URL: postgres://spareparts_user:spareparts_password@db:5432/spareparts_db
+    depends_on:
+      - db
+    restart: always
+
+  frontend:
+    build: ./Frontend/react-app
+    ports:
+      # پورت 80 (پورت پیش‌فرض وب) را وصل می‌کنیم به کانتینر
+      - "8080:80"
+    depends_on:
+      - backend
+    restart: always
+
+volumes:
+  postgres_data_prod:

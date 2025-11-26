@@ -18,6 +18,7 @@ class SimpleProductSerializer(serializers.ModelSerializer):
 # ========= OrderItem Serializer ======== #
 class OrderItemSerializer(serializers.ModelSerializer):
     """سریالایزر برای آیتم‌های سفارش"""
+    id = serializers.IntegerField(required=False) 
     product = SimpleProductSerializer(read_only=True)
     product_id = serializers.IntegerField(write_only=True)
     
@@ -48,7 +49,6 @@ class OrderManagementSerializer(serializers.ModelSerializer):
     username = serializers.CharField(source='user.username', read_only=True)
     status_display = serializers.CharField(source='get_status_display', read_only=True)
 
-    # فیلدها برای ورود اطلاعات هنگام ایجاد/ویرایش
     user = serializers.PrimaryKeyRelatedField(queryset=User.objects.all())
     items_data = OrderItemSerializer(many=True, write_only=True, source='items')
 
@@ -98,39 +98,70 @@ class OrderManagementSerializer(serializers.ModelSerializer):
 
     @transaction.atomic
     def update(self, instance, validated_data):
-        """سفارش و آیتم‌های آن را به صورت یکپارچه ویرایش می‌کند."""
+        """
+        مدیریت هوشمند آپدیت سفارش و آیتم‌های آن:
+        1. آیتم‌های حذف شده از لیست ورودی -> حذف از دیتابیس
+        2. آیتم‌های دارای ID -> آپدیت
+        3. آیتم‌های بدون ID -> ایجاد
+        """
         items_data = validated_data.pop('items', None)
         
-        # به‌روزرسانی فیلدهای اصلی سفارش
-        for key, value in validated_data.items():
-            setattr(instance, key, value)
+        # ===== آپدیت سفارش های قبلی ===== #
+        for attr, value in validated_data.items():
+            setattr(instance, attr, value)
         instance.save()
         
-        if items_data is not None:
-            # بازگرداندن موجودی قدیمی محصول
-            old_items = instance.items.all()
-            for item in old_items:
-                item.product.save()
+        # ===== بررسی آیتم‌های جدید ===== #
+        if items_data is None:
+            return instance
+
+        
+        existing_item_ids = set(instance.items.values_list('id', flat=True))
+        incoming_item_ids = set()
+        
+        total_amount = 0
+        
+        for item_data in items_data:
+            item_id = item_data.get('id', None)
+            product_id = item_data.get('product_id')
             
-            # ایجاد آیتم‌های جدید
-            total_amount = 0
-            for item_data in items_data:
-                product = Product.objects.get(id=item_data['product_id'])
-                price_at_time = product.price
+            if product_id:
+                product = Product.objects.get(id=product_id)
+                current_price = product.price
+            
+            if item_id and item_id in existing_item_ids:
+                # --- حالت آپدیت (آیتم وجود دارد و ID ارسال شده) ---
+                order_item = OrderItem.objects.get(id=item_id, order=instance)
                 
-                OrderItem.objects.create(
+                # اگر محصول تغییر کرده بود آپدیت کن
+                if product_id:
+                    order_item.product = product
+                    order_item.price_at_time_of_purchase = current_price # قیمت جدید اعمال شود؟ (بستگی به بیزینس دارد)
+                
+                order_item.save()
+                incoming_item_ids.add(item_id)
+                
+                # محاسبه مبلغ
+                total_amount += order_item.price_at_time_of_purchase
+
+            else:
+                # --- حالت ایجاد (آیتم ID ندارد یا ID اشتباه است) ---
+                new_item = OrderItem.objects.create(
                     order=instance,
                     product=product,
-                    price_at_time_of_purchase=price_at_time
+                    price_at_time_of_purchase=current_price
                 )
-                
-                product.save()
-                
-                total_amount += price_at_time
-            
-            # به‌روزرسانی مبلغ کل سفارش
-            instance.total_amount = total_amount
-            instance.save()
-            
+                total_amount += new_item.price_at_time_of_purchase
+
+        # 3. حالت حذف (آیتم در دیتابیس هست ولی در لیست ورودی نیست)
+        # آیتم‌هایی که در دیتابیس بودند ولی ID آن‌ها در لیست ورودی جدید نیست
+        items_to_delete_ids = existing_item_ids - incoming_item_ids
+        if items_to_delete_ids:
+            # اگر لاجیک خاصی برای بازگرداندن موجودی انبار دارید اینجا انجام دهید
+            OrderItem.objects.filter(id__in=items_to_delete_ids).delete()
+
+        # 4. آپدیت قیمت کل نهایی
+        instance.total_amount = total_amount
+        instance.save()
+        
         return instance
-    
