@@ -40,6 +40,8 @@ CORS_ALLOWED_ORIGINS = [
     #  پورت 80
     "http://frontend:80",
     "http://87.107.108.77:80",
+    "http://armanyadakpart.ir",
+    "http://www.armanyadakpart.ir",
     "https://armanyadakpart.ir",
     "https://www.armanyadakpart.ir",
 ]
@@ -49,6 +51,8 @@ CSRF_TRUSTED_ORIGINS = [
     "http://127.0.0.1:3000",
     "http://frontend:3000",
     "http://87.107.108.77:80",
+    "http://armanyadakpart.ir",
+    "http://www.armanyadakpart.ir",
     "https://armanyadakpart.ir",
     "https://www.armanyadakpart.ir",
 ]
