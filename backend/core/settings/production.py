@@ -40,6 +40,8 @@ CORS_ALLOWED_ORIGINS = [
     #  پورت 80
     "http://frontend:80",
     "http://87.107.108.77:80",
+    "https://armanyadakpart.ir",
+    "https://www.armanyadakpart.ir",
 ]
 
 CSRF_TRUSTED_ORIGINS = [
@@ -47,8 +49,13 @@ CSRF_TRUSTED_ORIGINS = [
     "http://127.0.0.1:3000",
     "http://frontend:3000",
     "http://87.107.108.77:80",
+    "https://armanyadakpart.ir",
+    "https://www.armanyadakpart.ir",
 ]
 
+# 2. تنظیمات مربوط به پروکسی (بسیار مهم برای Nginx و Cloudflare)
+# این خط به جنگو می‌گوید اگر هدر X-Forwarded-Proto مقدار https داشت، درخواست را امن تلقی کن.
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 # Email settings
 # In production, you would configure these with actual email service credentials
 # EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
