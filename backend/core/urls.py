@@ -23,7 +23,7 @@ from django.conf.urls.static import static
 from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView
 
 urlpatterns = [
-    path("admin/", admin.site.urls),
+    path("it's-a-secret:)/", admin.site.urls),
     path("api/", include("apps.api.urls")),
     path("dashboard/", include("apps.dashboard.urls")),
     
