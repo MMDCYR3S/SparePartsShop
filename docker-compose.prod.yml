@@ -23,7 +23,7 @@ services:
       # مهم: دیباگ حتما باید خاموش باشد
       DEBUG: 0
       # آی‌پی سرور خودت را اینجا بنویس
-      ALLOWED_HOSTS: "localhost,127.0.0.1,87.107.108.77"
+      ALLOWED_HOSTS: "localhost,127.0.0.1,87.107.108.77,armanyadakpart.ir,www.armanyadakpart.ir"
       DATABASE_URL: postgres://spareparts_user:spareparts_password@db:5432/spareparts_db
     depends_on:
       - db
