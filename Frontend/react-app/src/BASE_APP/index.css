@@ -2,18 +2,16 @@
 
 @theme {
   /* پالت رنگی سازمانی */
-  --color-primary: #0f172a;       /* Slate 900 */
-  --color-primary-light: #1e293b; /* Slate 800 */
-  --color-primary-dark: #020617;  /* Slate 950 */
+  --color-primary: #0f172a;
+  --color-primary-light: #1e293b;
+  --color-primary-dark: #020617;
+  --color-accent: #facc15;
+  --color-accent-hover: #eab308;
 
-  --color-accent: #facc15;        /* Yellow 400 */
-  --color-accent-hover: #eab308;  /* Yellow 500 */
-
-  --color-surface: #f3f4f6;       /* Gray 100 - پس زمینه کل پنل */
-  --color-surface-dark: #9ca3af;  
-  
-  /* تنظیم فونت */
-  --font-sans: "Vazirmatn", ui-sans-serif, system-ui, sans-serif;
+  --color-surface: #f3f4f6;
+  --color-surface-dark: #9ca3af;
+/* تنظیم فونت */
+--font-sans: "Vazirmatn", ui-sans-serif, system-ui, sans-serif;
 }
 
 /* استایل‌های پایه و Reset */
@@ -52,4 +50,27 @@
     from { opacity: 0; transform: translateY(10px); }
     to { opacity: 1; transform: translateY(0); }
   }
+}
+
+/* انیمیشن کلیک ژله‌ای */
+@keyframes jelly {
+  0% { transform: scale(1); }
+  25% { transform: scale(0.85); }
+  50% { transform: scale(1.1); }
+  75% { transform: scale(0.95); }
+  100% { transform: scale(1); }
+}
+
+.animate-jelly {
+  animation: jelly 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
+}
+
+/* انیمیشن ظهور نرم */
+@keyframes slideUpFade {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-slide-up {
+  animation: slideUpFade 0.3s ease-out forwards;
 }
