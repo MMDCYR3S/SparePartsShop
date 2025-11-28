@@ -1,4 +1,5 @@
 from rest_framework import serializers
+from rest_framework.reverse import reverse
 
 from apps.shop.models import Product, ProductImage, Category, Car
 
@@ -10,15 +11,39 @@ class ProductImageSerializer(serializers.ModelSerializer):
 
 # ======= Car Serializers ======= #
 class CarSerializer(serializers.ModelSerializer):
+    url = serializers.HyperlinkedIdentityField(
+        view_name='api:v1:car-detail',
+        lookup_field='pk'
+    )
+
+    products_url = serializers.SerializerMethodField()
+    
     class Meta:
         model = Car
-        fields = ['id', 'make', 'model', 'year']
+        fields = ['id', 'make', 'model', 'year', 'url', 'products_url']
+        
+    def get_products_url(self, obj):
+        request = self.context.get('request')
+        url = reverse('api:v1:product-list', request=request)
+        return f"{url}?compatible_cars={obj.id}"
 
 # ======= Category Serializers ======= #
 class CategorySerializer(serializers.ModelSerializer):
+        
+    url = serializers.HyperlinkedIdentityField(
+        view_name='api:v1:category-detail',
+        lookup_field='pk'
+    )
+    products_url = serializers.SerializerMethodField()
+
     class Meta:
         model = Category
-        fields = ['id', 'name', 'parent']
+        fields = ['id', 'name', 'parent', 'url', 'products_url']
+        
+    def get_products_url(self, obj):
+        request = self.context.get('request')
+        url = reverse('api:v1:product-list', request=request)
+        return f"{url}?category={obj.id}"
 
 # ======= Product Serializers ======= #
 class ProductListSerializer(serializers.HyperlinkedModelSerializer):

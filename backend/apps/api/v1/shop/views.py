@@ -3,8 +3,13 @@ from rest_framework.permissions import IsAuthenticatedOrReadOnly
 from django_filters.rest_framework import DjangoFilterBackend
 from drf_spectacular.utils import extend_schema
 
-from apps.shop.models import Product
-from .serializers import ProductListSerializer, ProductDetailSerializer
+from apps.shop.models import Product, Car, Category
+from .serializers import (
+    ProductListSerializer,
+    ProductDetailSerializer,
+    CategorySerializer,
+    CarSerializer
+)
 from .filters import ProductFilter
 
 # ========= Product ViewSet ========= #
@@ -32,3 +37,23 @@ class ProductViewSet(viewsets.ReadOnlyModelViewSet):
         # اطمینان از اینکه تصویر اصلی در کوئری وجود دارد
         queryset = queryset.prefetch_related('images', 'compatible_cars').select_related('category')
         return queryset
+    
+# ===== Category ViewSet ===== #
+@extend_schema(tags=["Categories"])
+class CategoryViewSet(viewsets.ReadOnlyModelViewSet):
+    """
+    نمایش لیست دسته‌بندی‌ها برای ساخت منو در فرانت
+    """
+    queryset = Category.objects.filter(parent=None)
+    serializer_class = CategorySerializer
+    pagination_class = None
+    
+@extend_schema(tags=["Cars"])
+class CarViewSet(viewsets.ReadOnlyModelViewSet):
+    """
+    نمایش لیست خودروها برای فیلتر کردن محصولات
+    """
+    queryset = Car.objects.all()
+    serializer_class = CarSerializer
+    pagination_class = None
+    

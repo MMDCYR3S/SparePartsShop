@@ -15,6 +15,7 @@ class ProductFilter(django_filters.FilterSet):
     max_price = django_filters.NumberFilter(field_name="price", lookup_expr='lte')
     in_stock = django_filters.BooleanFilter(method='filter_in_stock')
     category = django_filters.ModelChoiceFilter(queryset=Category.objects.all())
+    compatible_cars = django_filters.ModelChoiceFilter(queryset=Car.objects.all())
     car_make = django_filters.CharFilter(method='filter_car_make')
     car_model = django_filters.CharFilter(method='filter_car_model')
     car_year = django_filters.NumberFilter(method='filter_car_year')
