@@ -55,8 +55,7 @@ class Command(BaseCommand):
 
             total_amount = Decimal(0)
             for p in order_items:
-                quantity = random.randint(1, 3)
-                total_amount += p.price * quantity
+                total_amount += p.price
 
             order = Order.objects.create(
                 user=user,
@@ -67,11 +66,9 @@ class Command(BaseCommand):
             )
 
             for product in order_items:
-                quantity = random.randint(1, 3)
                 OrderItem.objects.create(
                     order=order,
                     product=product,
-                    quantity=quantity,
                     price_at_time_of_purchase=product.price,
                 )
 

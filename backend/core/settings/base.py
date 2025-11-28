@@ -25,17 +25,17 @@ env = environ.Env(
 )
 
 # Determine which environment file to use
-environment = os.environ.get('DJANGO_ENV', 'production')
+# environment = os.environ.get('DJANGO_ENV', 'production')
 
-if environment == 'production':
-    # In production, we rely on environment variables
-    pass
-elif environment == 'producton':
-    env_file = os.path.join(BASE_DIR, 'env/.env.prod')
-    environ.Env.read_env(env_file)
-else:
-    env_file = os.path.join(BASE_DIR, 'env/.env.dev')
-    environ.Env.read_env(env_file)
+# if environment == 'production':
+#     # In production, we rely on environment variables
+#     pass
+# elif environment == 'producton':
+#     env_file = os.path.join(BASE_DIR, 'env/.env.prod')
+#     environ.Env.read_env(env_file)
+# else:
+#     env_file = os.path.join(BASE_DIR, 'env/.env.dev')
+#     environ.Env.read_env(env_file)
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = os.environ.get('SECRET_KEY', 'django-insecure-%u!=3r1-t0syn&y#_t*^swsj*q8a5a7fhvs72g8kribaxw$3lu')
