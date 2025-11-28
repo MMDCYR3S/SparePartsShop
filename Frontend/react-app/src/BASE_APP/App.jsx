@@ -10,6 +10,9 @@ import {
 // --- Contexts ---
 import { AuthProvider } from "../context/AuthContext"; // کانتکست ادمین
 import { ShopAuthProvider } from "../context/ShopAuthContext"; // کانتکست جدید فروشگاه (حتما ایمپورت شود)
+import { CartProvider } from "../context/CartContext";
+
+
 
 import ProtectedRoute from "../components/ProtectedRoute";
 
@@ -50,7 +53,7 @@ function App() {
       
       <AuthProvider> {/* کانتکست ادمین (اگر سراسریه) */}
         <ShopAuthProvider> {/* <--- این خط حیاتیه! کانتکست مشتری */}
-          
+          <CartProvider> {/* کانتکست سبد خرید */}
           <Routes>
             {/* =========================================
                 بخش مشتری (Storefront)
@@ -95,7 +98,7 @@ function App() {
             {/* صفحه 404 */}
             <Route path="*" element={<div className="p-10 text-center">404 - صفحه پیدا نشد</div>} />
           </Routes>
-          
+          </CartProvider>          
         </ShopAuthProvider>
       </AuthProvider>
     </Router>
