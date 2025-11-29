@@ -45,6 +45,11 @@ import AddressBook from "../app/shop/pages/profile/AddressBook";
 import PersonalInfo from "../app/shop/pages/profile/PersonalInfo";
 import Security from "../app/shop/pages/profile/Security";
 
+import ProductsPage from "../app/shop/pages/products/ProductsPage";
+import ProductDetailPage from "../app/shop/pages/products/ProductDetailPage";
+import CartPage from "../app/shop/pages/cart/CartPage";
+import CheckoutPage from "../app/shop/pages/checkout/CheckoutPage";
+
 
 function App() {
   return (
@@ -75,6 +80,12 @@ function App() {
               <Route path="profile/addresses" element={<AddressBook />} />
               <Route path="profile/info" element={<PersonalInfo />} />
               <Route path="profile/security" element={<Security />} />
+
+              <Route path="products" element={<ProductsPage />} />
+              <Route path="products/:id" element={<ProductDetailPage />} />
+              <Route path="cart" element={<CartPage />} />
+              <Route path="checkout" element={<CheckoutPage />} />
+              
               {/* سایر صفحات مشتری */}
             </Route>
 

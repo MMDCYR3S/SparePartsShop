@@ -5,7 +5,7 @@ import BASE_API from "../../BASE_API";
 // ورود ادمین
 export const adminLogin = async (username, password) => {
   try {
-    const response = await axios.post(BASE_API + "accounts/login/", {
+    const response = await axios.post(BASE_API + "/accounts/login/", {
       username,
       password,
     });
@@ -22,7 +22,7 @@ export const adminLogin = async (username, password) => {
 export const adminLogout = async (refreshToken) => {
   try {
     // معمولاً برای خروج، توکن refresh رو به سرور می‌فرستیم تا باطل بشه
-    await axios.post(BASE_API + "accounts/logout/", {
+    await axios.post(BASE_API + "/accounts/logout/", {
       refresh: refreshToken,
     });
     return { success: true };
@@ -35,7 +35,7 @@ export const adminLogout = async (refreshToken) => {
 // تازه‌سازی توکن access
 export const refreshToken = async (refresh) => {
   try {
-    const response = await axios.post(BASE_API + "accounts/token/refresh/", {
+    const response = await axios.post(BASE_API + "/accounts/token/refresh/", {
       refresh,
     });
     return response.data;

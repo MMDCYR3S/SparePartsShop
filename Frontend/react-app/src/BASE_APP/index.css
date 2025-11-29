@@ -74,3 +74,35 @@
 .animate-slide-up {
   animation: slideUpFade 0.3s ease-out forwards;
 }
+
+/* iOS Slide Up Animation */
+@keyframes slideUpIOS {
+  from {
+    transform: translateY(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.animate-slide-up-ios {
+  animation: slideUpIOS 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* Hide Scrollbar but keep functionality */
+.scrollbar-hide::-webkit-scrollbar {
+    display: none;
+}
+.scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
+
+/* iOS Blur Effect */
+.glass {
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
