@@ -42,7 +42,6 @@ class AddToCartView(GenericAPIView):
         serializer = self.get_serializer(data=request.data)
         if serializer.is_valid():
             product_id = serializer.validated_data['product_id']
-            quantity = serializer.validated_data['quantity']
             
             product = get_object_or_404(Product, id=product_id)
             cart, created = Cart.objects.get_or_create(user=request.user)
@@ -51,31 +50,14 @@ class AddToCartView(GenericAPIView):
             cart_item, created = CartItem.objects.get_or_create(
                 cart=cart, 
                 product=product,
-                defaults={'quantity': quantity}
             )
             
             if not created:
-                # اگر محصول از قبل در سبد وجود داشته، تعداد را افزایش می‌دهیم
-                new_quantity = cart_item.quantity + quantity
-                if new_quantity > product.stock_quantity:
-                    return Response(
-                        {"error": (f"تعداد درخواستی بیشتر از موجودی محصول ({product.stock_quantity}) است.")},
-                        status=status.HTTP_400_BAD_REQUEST
-                    )
-                cart_item.quantity = new_quantity
                 cart_item.save()
-            
-            # بررسی اینکه آیا تعداد انتخابی معادل یک بسته کامل است
-            is_package = cart_item.quantity >= product.package_quantity and cart_item.quantity % product.package_quantity == 0
             
             response_data = {
                 "message": "محصول با موفقیت به سبد خرید اضافه شد.",
                 "cart_item": CartItemSerializer(cart_item, context={'request': request}).data,
-                "is_package": is_package,
-                "package_info": {
-                    "package_quantity": product.package_quantity,
-                    "is_complete_package": is_package
-                } if is_package else None
             }
             
             return Response(response_data, status=status.HTTP_201_CREATED)
@@ -99,20 +81,12 @@ class UpdateCartItemView(GenericAPIView):
         )
         
         if serializer.is_valid():
-            cart_item.quantity = serializer.validated_data['quantity']
             cart_item.save()
-            
-            # بررسی اینکه آیا تعداد انتخابی معادل یک بسته کامل است
-            is_package = cart_item.quantity >= cart_item.product.package_quantity and cart_item.quantity % cart_item.product.package_quantity == 0
+
             
             response_data = {
                 "message": "تعداد محصول با موفقیت ویرایش شد.",
                 "cart_item": CartItemSerializer(cart_item, context={'request': request}).data,
-                "is_package": is_package,
-                "package_info": {
-                    "package_quantity": cart_item.product.package_quantity,
-                    "is_complete_package": is_package
-                } if is_package else None
             }
             
             return Response(response_data)
