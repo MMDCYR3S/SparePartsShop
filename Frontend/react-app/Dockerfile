@@ -16,7 +16,7 @@ FROM nginx:alpine
 COPY --from=build /app/dist /usr/share/nginx/html
 
 # ۲. (مهم) کپی کردن تنظیمات اختصاصی Nginx که ساختیم
-COPY nginx.conf /etc/nginx/conf.d/default.conf
+COPY nginx.conf /etc/nginx/conf.d/spare-parts-shop.conf
 
 EXPOSE 80
 CMD ["nginx", "-g", "daemon off;"]
