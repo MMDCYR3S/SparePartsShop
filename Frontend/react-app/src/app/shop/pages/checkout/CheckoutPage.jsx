@@ -26,7 +26,7 @@ const CheckoutPage = () => {
   };
 
   return (
-    <div className="pb-32 animate-fade-in max-w-2xl mx-auto">
+    <div className="pb-32 p-4 animate-fade-in max-w-2xl mx-auto">
       <h1 className="text-2xl font-black text-gray-800 mb-6">نهایی کردن سفارش</h1>
 
       {/* 1. Address Selection */}

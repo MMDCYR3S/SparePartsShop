@@ -26,7 +26,7 @@ const CartPage = () => {
   }
 
   return (
-    <div className="pb-32 animate-fade-in">
+    <div className="p-4 animate-fade-in">
       <div className="flex items-center justify-between mb-6">
         <h1 className="text-2xl font-black text-gray-800">سبد خرید</h1>
         <button onClick={clearCart} className="text-xs text-red-500 font-bold bg-red-50 px-3 py-1.5 rounded-lg hover:bg-red-100 transition">
@@ -66,7 +66,7 @@ const CartPage = () => {
       </div>
 
       {/* Summary Footer */}
-      <div className="fixed bottom-[4rem] md:bottom-0 left-0 right-0 bg-white border-t border-gray-100 p-5 shadow-[0_-5px_20px_rgba(0,0,0,0.05)] z-20 pb-safe">
+      <div className="fixed bottom-0 pb-24 md:bottom-0 left-0 right-0 bg-white border-t border-gray-100 p-5 shadow-[0_-5px_20px_rgba(0,0,0,0.05)] z-20 pb-safe">
          <div className="container mx-auto max-w-4xl">
             <div className="flex justify-between items-center mb-4 text-sm">
                 <span className="text-gray-500">مجموع قابل پرداخت:</span>

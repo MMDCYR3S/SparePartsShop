@@ -29,11 +29,11 @@ const ShopHeader = ({ onToggleSidebar }) => {
         </div>
 
         {/* Center: Logo */}
-        <Link to="/" className="absolute left-1/2 -translate-x-1/2 flex items-center gap-1 group">
+        <Link to="/" className="absolute left-1/2 -translate-x-1/2 flex items-center gap-2 group">
             <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center text-accent font-black shadow-lg shadow-primary/20 group-hover:rotate-6 transition-transform">
-                S
+                A
             </div>
-            <span className="font-bold text-xl text-primary tracking-tight">Spare<span className="text-accent">Parts</span></span>
+            <span className="font-bold text-xl text-primary tracking-tight">  آرمان یدک  </span>
         </Link>
 
         {/* Left: Cart & User Status */}

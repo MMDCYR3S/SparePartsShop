@@ -18,7 +18,7 @@ const ShopLayout = () => {
 
       {/* 3. Main Content */}
       {/* پدینگ پایین برای اینکه محتوا زیر نوار پایین نره */}
-      <main className=" pb-24 md:pb-8 animate-fade-in p-1">
+      <main className=" pb-24 md:pb-8 animate-fade-in">
         <Outlet />
       </main>
 

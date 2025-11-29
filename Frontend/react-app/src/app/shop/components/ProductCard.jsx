@@ -1,30 +1,28 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { useCart } from "@/context/CartContext";
-import { PlusIcon, PhotoIcon } from "@heroicons/react/24/outline";
+import { PlusIcon, EyeIcon } from "@heroicons/react/24/outline";
+import { ShoppingBag } from "lucide-react"; // استفاده از Lucide برای آیکون‌های مدرن‌تر
 import BASE_API from "@/app/BASE_API";
 
-const ProductCard = ({ product }) => {
+// --- Logic Layer (Custom Hook) ---
+// این هوک مسئول تمام منطق‌های کارت محصول است
+const useProductCard = (product) => {
   const { addToCart, isUpdating } = useCart();
   const [imgError, setImgError] = useState(false);
 
-  // تابع هوشمند استخراج تصویر
-  const getProductImage = (p) => {
-    // 1. اولویت با تصویر اصلی
-    let img = p.main_image || p.image;
-    // 2. اگر نبود، اولین تصویر از لیست تصاویر
-    if (!img && p.images && p.images.length > 0) {
-      img = p.images[0].image || p.images[0].image_url;
+  const getProductImage = () => {
+    let img = product.main_image || product.image;
+    if (!img && product.images?.length > 0) {
+      img = product.images[0].image || product.images[0].image_url;
     }
-    
     if (!img) return null;
     if (img.startsWith("http")) return img;
-    // حذف بخش تکراری احتمالی از BASE_API
     const baseUrl = BASE_API.endsWith("/api/v1/") ? BASE_API.replace("/api/v1/", "") : BASE_API;
     return `${baseUrl}${img.startsWith("/") ? img.substring(1) : img}`;
   };
 
-  const finalImage = getProductImage(product);
+  const finalImage = getProductImage();
 
   const handleAddToCart = (e) => {
     e.preventDefault();
@@ -32,74 +30,91 @@ const ProductCard = ({ product }) => {
     addToCart(product.id);
   };
 
+  return { finalImage, imgError, setImgError, handleAddToCart, isUpdating };
+};
+
+// --- UI Layer (Pure Component) ---
+const ProductCard = ({ product }) => {
+  const { finalImage, imgError, setImgError, handleAddToCart, isUpdating } = useProductCard(product);
+
   return (
     <Link 
       to={`/products/${product.id}`}
-      className="block group relative w-full"
+      className="group relative bg-white rounded-[2rem] p-3 border border-gray-100 transition-all duration-500 hover:shadow-[0_20px_40px_-15px_rgba(0,0,0,0.1)] hover:border-gray-200 flex flex-col h-full overflow-hidden"
     >
-      <div className="bg-white rounded-[1.5rem] shadow-[0_4px_20px_rgba(0,0,0,0.04)] border border-gray-100/50 overflow-hidden transition-all duration-300 hover:shadow-[0_8px_30px_rgba(0,0,0,0.08)] hover:-translate-y-1 active:scale-[0.98]">
+      {/* 1. Image Area with Action Overlay */}
+      <div className="relative w-full aspect-square bg-surface rounded-[1.5rem] overflow-hidden mb-4">
+        {/* Badge: Stock or Discount */}
+        {!product.is_stock && (
+             <div className="absolute top-3 left-3 z-20 bg-red-500/90 backdrop-blur-sm text-white text-[10px] font-bold px-2.5 py-1 rounded-full shadow-lg shadow-red-500/20">
+                ناموجود
+             </div>
+        )}
         
-        {/* 1. Image Container - STRICTLY SQUARE */}
-        <div className="w-full aspect-square bg-gray-50/50 relative flex items-center justify-center p-6">
+        {/* Image */}
+        <div className="w-full h-full flex items-center justify-center overflow-hidden transition-transform duration-700 group-hover:scale-110">
           {finalImage && !imgError ? (
             <img 
               src={finalImage} 
               alt={product.name} 
               onError={() => setImgError(true)}
-              className="w-full h-full object-contain mix-blend-multiply drop-shadow-sm transition-transform duration-500 group-hover:scale-110" 
+              className="w-full h-full object-contain mix-blend-multiply drop-shadow-sm" 
               loading="lazy"
             />
           ) : (
-            <div className="text-gray-300 flex flex-col items-center gap-1">
-               <PhotoIcon className="w-8 h-8" />
+            <div className="text-gray-300 flex flex-col items-center gap-2">
+               <div className="w-12 h-12 bg-gray-200 rounded-full flex items-center justify-center">
+                 <ShoppingBag size={20} />
+               </div>
             </div>
-          )}
-
-          {/* Stock Badge (Minimal) */}
-          {!product.is_stock && (
-             <div className="absolute inset-0 bg-white/60 backdrop-blur-[1px] flex items-center justify-center z-10">
-                <span className="bg-red-500 text-white text-[10px] font-bold px-3 py-1 rounded-full shadow-sm">
-                    ناموجود
-                </span>
-             </div>
           )}
         </div>
 
-        {/* 2. Content */}
-        <div className="p-4 flex flex-col gap-2">
-          
-          {/* Brand & Code */}
-          <div className="flex justify-between items-center text-[10px] text-gray-400 font-medium">
-             <span className="uppercase tracking-wide">{product.brand || "متفرقه"}</span>
-             {product.part_code && <span className="bg-gray-50 px-1.5 py-0.5 rounded text-gray-500">{product.part_code}</span>}
-          </div>
+        {/* Quick Action Overlay (Glassmorphism) */}
+        <div className="absolute inset-x-0 bottom-0 p-4 translate-y-full group-hover:translate-y-0 transition-transform duration-300 z-10">
+           <button 
+              onClick={handleAddToCart}
+              disabled={!product.is_stock || isUpdating}
+              className="w-full h-10 bg-primary/90 backdrop-blur-md text-white rounded-xl font-bold text-xs flex items-center justify-center gap-2 shadow-lg shadow-primary/20 hover:bg-primary transition-colors active:scale-95 disabled:opacity-70 disabled:cursor-not-allowed"
+           >
+              {isUpdating ? "..." : (product.is_stock ? "افزودن سریع" : "خبرم کن")}
+              {product.is_stock && <PlusIcon className="w-4 h-4" />}
+           </button>
+        </div>
+      </div>
 
-          {/* Title */}
-          <h3 className="text-xs font-bold text-gray-800 leading-relaxed line-clamp-2 min-h-[2.5em]">
-            {product.name}
-          </h3>
+      {/* 2. Content Area */}
+      <div className="px-2 pb-2 flex flex-col flex-1">
+        
+        {/* Brand & Meta */}
+        <div className="flex justify-between items-center mb-2">
+           <span className="text-[10px] font-bold text-accent-hover bg-accent/10 px-2 py-0.5 rounded-md uppercase tracking-wide">
+             {product.brand || "عمومی"}
+           </span>
+           <span className="text-[10px] text-gray-400 font-mono tracking-wider">{product.part_code}</span>
+        </div>
 
-          {/* Footer: Price & Add */}
-          <div className="flex items-center justify-between mt-1">
-             <div className="flex flex-col">
-                <div className="flex items-baseline gap-1 text-primary">
-                    <span className="text-sm font-black">{Number(product.price).toLocaleString()}</span>
-                    <span className="text-[9px] text-gray-400 font-medium">تومان</span>
-                </div>
-             </div>
+        {/* Title */}
+        <h3 className="text-sm font-bold text-primary leading-relaxed line-clamp-2 mb-3 flex-1 group-hover:text-blue-600 transition-colors">
+          {product.name}
+        </h3>
 
-             <button 
-                onClick={handleAddToCart}
-                disabled={!product.is_stock || isUpdating}
-                className={`w-9 h-9 rounded-full flex items-center justify-center shadow-sm transition-all active:scale-90 ${
-                    product.is_stock 
-                    ? 'bg-primary text-white shadow-primary/20 hover:bg-primary-light' 
-                    : 'bg-gray-100 text-gray-300 cursor-not-allowed'
-                }`}
-             >
-                <PlusIcon className="w-5 h-5 stroke-2" />
-             </button>
-          </div>
+        {/* Price Section */}
+        <div className="mt-auto flex items-end justify-between border-t border-gray-50 pt-3">
+           <div className="flex flex-col">
+              <span className="text-[10px] text-gray-400">قیمت نهایی</span>
+              <div className="flex items-baseline gap-1">
+                  <span className="text-lg font-black text-primary tracking-tight">
+                    {Number(product.price).toLocaleString()}
+                  </span>
+                  <span className="text-[10px] font-bold text-gray-400">تومان</span>
+              </div>
+           </div>
+           
+           {/* Mobile Only Add Button (Visible only on small screens) */}
+           <div className="md:hidden w-8 h-8 rounded-full bg-gray-50 flex items-center justify-center text-primary">
+              <PlusIcon className="w-4 h-4" />
+           </div>
         </div>
       </div>
     </Link>

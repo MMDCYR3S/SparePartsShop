@@ -43,7 +43,7 @@ const AddressBook = () => {
   };
 
   return (
-    <div className="pb-24 animate-fade-in relative min-h-screen">
+    <div className="p-4 animate-fade-in relative min-h-screen">
       {/* Header */}
       <div className="flex items-center gap-3 mb-6">
         <button onClick={() => navigate(-1)} className="p-2 bg-white rounded-xl shadow-sm border border-gray-100">
@@ -91,7 +91,7 @@ const AddressBook = () => {
       {/* Floating Action Button (FAB) */}
       <button 
         onClick={() => setIsModalOpen(true)}
-        className="fixed bottom-6 left-6 w-14 h-14 bg-primary text-accent rounded-full shadow-2xl shadow-primary/40 flex items-center justify-center hover:scale-105 active:scale-95 transition-transform z-20"
+        className="fixed bottom-6 left-6 w-14 h-14 mb-20  bg-primary text-accent rounded-full shadow-2xl shadow-primary/40 flex items-center justify-center hover:scale-105 active:scale-95 transition-transform z-20"
       >
         <Plus size={28} strokeWidth={3} />
       </button>
@@ -99,7 +99,7 @@ const AddressBook = () => {
       {/* Add Address Modal (Bottom Sheet Style) */}
       {isModalOpen && (
         <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-black/60 backdrop-blur-sm animate-fade-in">
-            <div className="bg-white w-full max-w-md rounded-t-[2rem] sm:rounded-2xl p-6 shadow-2xl animate-slide-up max-h-[90vh] overflow-y-auto">
+            <div className="pb-24 bg-white w-full max-w-md rounded-t-[2rem] sm:rounded-2xl p-6 shadow-2xl animate-slide-up max-h-[90vh] overflow-y-auto">
                 <div className="flex justify-between items-center mb-6">
                     <h3 className="font-bold text-lg">افزودن آدرس جدید</h3>
                     <button onClick={() => setIsModalOpen(false)} className="p-2 bg-gray-100 rounded-full"><X size={20} /></button>

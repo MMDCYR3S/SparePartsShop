@@ -21,7 +21,7 @@ const Security = () => {
   };
 
   return (
-    <div className="pb-24 animate-fade-in">
+    <div className="p-4 animate-fade-in">
       {/* Header */}
       <div className="flex items-center gap-3 mb-6">
         <button onClick={() => navigate(-1)} className="p-2 bg-white rounded-xl shadow-sm border border-gray-100">

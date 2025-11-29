@@ -12,12 +12,31 @@
   --color-surface-dark: #9ca3af;
 /* تنظیم فونت */
 --font-sans: "Vazirmatn", ui-sans-serif, system-ui, sans-serif;
+
+/* انیمیشن‌های کاستوم */
+  --animate-float: float 6s ease-in-out infinite;
+  --animate-fade-in-up: fadeInUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  --animate-scale-in: scaleIn 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  
+  @keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+  }
+  @keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes scaleIn {
+    from { opacity: 0; transform: scale(0.9); }
+    to { opacity: 1; transform: scale(1); }
+  }
 }
 
 /* استایل‌های پایه و Reset */
 @layer base {
   body {
     @apply bg-surface text-primary font-sans antialiased m-0 p-0 min-h-screen flex flex-col;
+    scroll-behavior: smooth;
   }
 
   /* استایل پیش‌فرض دکمه‌ها برای جلوگیری از تکرار */
@@ -46,11 +65,35 @@
     animation: fadeInUp 0.3s ease-out forwards;
   }
 
-  @keyframes fadeInUp {
-    from { opacity: 0; transform: translateY(10px); }
-    to { opacity: 1; transform: translateY(0); }
+}
+
+
+@layer utilities {
+  /* افکت شیشه‌ای پیشرفته */
+  .glass {
+    @apply bg-white/30 backdrop-blur-xl border border-white/20 shadow-lg;
+  }
+  
+  .glass-dark {
+    @apply bg-primary/80 backdrop-blur-xl border border-white/5 shadow-xl text-white;
+  }
+
+  /* حذف اسکرول بار اما حفظ قابلیت اسکرول */
+  .scrollbar-hide::-webkit-scrollbar {
+      display: none;
+  }
+  .scrollbar-hide {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+  }
+  
+  /* کلاس‌های میکرو-انترکشن */
+  .hover-trigger {
+    @apply transition-all duration-300 ease-out active:scale-95 hover:-translate-y-1 hover:shadow-xl;
   }
 }
+
+
 
 /* انیمیشن کلیک ژله‌ای */
 @keyframes jelly {
@@ -101,8 +144,10 @@
 }
 
 /* iOS Blur Effect */
-.glass {
-  background: rgba(255, 255, 255, 0.85);
+/* .glass {
+  background: rgba(255, 255, 255, 0.4);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
-}
+} */
+
+

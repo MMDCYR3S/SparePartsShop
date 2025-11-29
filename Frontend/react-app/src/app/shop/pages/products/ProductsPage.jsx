@@ -76,7 +76,7 @@ const ProductsPage = () => {
     <div className="pb-28 min-h-screen bg-[#F9FAFB]">
       
       {/* 1. Header Sticky */}
-      <div className="sticky top-0 z-30 glass border-b border-gray-100/50 pt-3 pb-2 px-4 transition-all">
+      <div className="sticky top-0 z-30 glass border-b border-gray-100/50 pt-3 pb-2 px-4 transition-all rounded-b-2xl">
         <div className="flex gap-3 items-center max-w-lg mx-auto mb-3">
             {/* Search Bar */}
             <div className="relative flex-1 group">
@@ -225,7 +225,7 @@ const ProductsPage = () => {
                 </div>
 
                 {/* Content */}
-                <div className="flex-1 overflow-y-auto p-6 min-h-[300px]">
+                <div className="flex-1 overflow-y-auto p-6 min-h-[300px] pb-24" >
                     {activeTab === 'category' && (
                         <div className="space-y-1">
                             <button onClick={() => setSelectedCategory("")} className={`w-full flex justify-between p-3 rounded-xl transition-colors ${selectedCategory==="" ? 'bg-primary/5 text-primary font-bold' : 'text-gray-600 hover:bg-gray-50'}`}>
@@ -269,7 +269,7 @@ const ProductsPage = () => {
                 </div>
 
                 {/* Footer Action */}
-                <div className="p-4 border-t border-gray-100 pb-safe">
+                <div className="p-4 border-t border-gray-100 pb-safe pb-24">
                     <button onClick={() => setIsFilterOpen(false)} className="w-full bg-primary text-white font-bold py-4 rounded-2xl shadow-lg shadow-primary/20 active:scale-[0.98] transition-transform">
                         مشاهده نتایج ({pagination.totalItems} محصول)
                     </button>

@@ -56,7 +56,7 @@ const PersonalInfo = () => {
   };
 
   return (
-    <div className="pb-24 animate-fade-in">
+    <div className="p-4 animate-fade-in">
       {/* Header */}
       <div className="flex items-center gap-3 mb-6">
         <button onClick={() => navigate(-1)} className="p-2 bg-white rounded-xl shadow-sm border border-gray-100">
@@ -127,7 +127,7 @@ const PersonalInfo = () => {
         </div>
 
         {/* Sticky Submit Button */}
-        <div className="fixed bottom-0 left-0 right-0 p-4 bg-white/80 backdrop-blur-md border-t border-gray-100">
+        <div className="fixed bottom-0 left-0 right-0 p-4 pb-24 bg-white/80 backdrop-blur-md border-t border-gray-100">
             <button 
                 type="submit" 
                 disabled={isSubmitting}
