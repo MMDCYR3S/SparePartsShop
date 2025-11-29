@@ -47,14 +47,18 @@ class CategorySerializer(serializers.ModelSerializer):
 
 # ======= Product Serializers ======= #
 class ProductListSerializer(serializers.HyperlinkedModelSerializer):
+    """
+    سریالایزر مربوط به محصولات به همراه لیست عکس ها
+    """
     url_detail = serializers.HyperlinkedIdentityField(view_name='api:v1:product-detail')
     category_name = serializers.CharField(source='category.name', read_only=True)
+    images = ProductImageSerializer(many=True, read_only=True)
     
     class Meta:
         model = Product
         fields = [
             'id', 'url_detail', 'name', 'brand', 'part_code', 
-            'price', 'category_name', "is_stock"
+            'price', 'category_name', "is_stock", 'images'
         ]
 
 # ======= Product Detail Serializers ======= #
