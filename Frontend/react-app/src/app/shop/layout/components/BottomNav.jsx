@@ -40,7 +40,7 @@ const BottomNav = () => {
     <div className="fixed bottom-0 left-0 right-0 z-50 md:hidden pointer-events-none">
       
       {/* نگهدارنده داک (Glassmorphism) */}
-      <div className="pointer-events-auto bg-white/90 backdrop-blur-xl border-t border-gray-200 pb-safe pt-2 px-4 shadow-[0_-5px_20px_rgba(0,0,0,0.05)] rounded-t-3xl mx-2 mb-2 transition-all duration-300">
+      <div className="pointer-events-auto bg-white/90 backdrop-blur-xl border-t border-gray-200 pb-safe pt-2 px-4 shadow-[0_-5px_20px_rgba(0,0,0,0.05)] rounded-t-3xl transition-all duration-300">
         
         <div className="flex justify-around items-end h-16 relative">
           

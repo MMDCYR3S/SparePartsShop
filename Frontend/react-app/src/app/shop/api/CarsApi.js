@@ -1,13 +1,12 @@
 import shopAxios from "../../../api/shopAxios";
 
 export const CarsApi = {
-  // دریافت لیست تمام خودروها
+  // دریافت لیست خودروها
   getCars: async () => {
-    const response = await shopAxios.get("shop/cars/");
+    const response = await shopAxios.get("shop/cars/", { params: { page_size: 1000 } });
     return response.data;
   },
 
-  // دریافت اطلاعات یک خودرو خاص
   getCarById: async (id) => {
     const response = await shopAxios.get(`shop/cars/${id}/`);
     return response.data;

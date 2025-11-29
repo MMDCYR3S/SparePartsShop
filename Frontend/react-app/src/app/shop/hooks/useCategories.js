@@ -1,31 +1,29 @@
 import { useState, useCallback, useEffect } from "react";
 import { CategoriesApi } from "../api/CategoriesApi";
-import { handleApiError } from "@/utils/errorHandler";
 
 export const useCategories = (autoFetch = false) => {
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
 
   const fetchCategories = useCallback(async () => {
     setLoading(true);
-    setError(null);
     try {
       const data = await CategoriesApi.getCategories();
-      setCategories(data);
+      // هندل کردن هوشمند: اگر آرایه بود خودش، اگر نه results
+      const list = Array.isArray(data) ? data : (data.results || []);
+      setCategories(list);
     } catch (err) {
-      setError(handleApiError(err));
+      console.error("خطا در دریافت دسته‌بندی‌ها:", err);
     } finally {
       setLoading(false);
     }
   }, []);
 
-  // دریافت خودکار (مناسب برای سایدبار یا مگامنو)
   useEffect(() => {
     if (autoFetch) {
       fetchCategories();
     }
   }, [autoFetch, fetchCategories]);
 
-  return { categories, loading, error, fetchCategories };
+  return { categories, loading, fetchCategories };
 };
