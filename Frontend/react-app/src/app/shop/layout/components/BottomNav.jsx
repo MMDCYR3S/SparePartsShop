@@ -20,11 +20,11 @@ const BottomNav = () => {
   ];
 
   return (
-    <div className="fixed bottom-5 left-0 right-0 z-50 flex justify-center pointer-events-none pb-safe">
+    <div className="fixed bottom-3 left-0 right-0 z-50 flex justify-center pointer-events-none pb-safe">
       
       {/* کانتینر اصلی */}
       <div 
-        className="pointer-events-auto w-auto min-w-[340px] h-[70px] bg-white/80 backdrop-blur-3xl border border-white/60 shadow-[0_20px_50px_-12px_rgba(0,0,0,0.1)] rounded-full flex items-center justify-between p-2 gap-2 transition-all duration-300 ease-out"
+        className="pointer-events-auto w-auto min-w-[340px] h-[70px] glass rounded-full flex items-center justify-between p-2 gap-2 transition-all duration-300 ease-out"
         style={{ willChange: 'transform, width' }}
       >
         

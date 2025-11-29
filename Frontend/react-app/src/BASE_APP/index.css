@@ -71,7 +71,7 @@
 @layer utilities {
   /* افکت شیشه‌ای پیشرفته */
   .glass {
-    @apply bg-white/30 backdrop-blur-xl border border-white/20 shadow-lg;
+    @apply bg-white/30 backdrop-blur-xl border border-white/50 shadow-lg;
   }
   
   .glass-dark {

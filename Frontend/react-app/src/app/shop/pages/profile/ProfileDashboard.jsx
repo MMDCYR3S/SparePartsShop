@@ -21,10 +21,10 @@ const ProfileDashboard = () => {
   if (loadingProfile && !profile) return <div className="h-[60vh] flex items-center justify-center"><LoadingSpinner /></div>;
 
   return (
-    <div className="pb-24 animate-fade-in">
+    <div className="pb-24 p-4 animate-fade-in">
       
       {/* 1. Header & Avatar Section */}
-      <div className="bg-white rounded-3xl p-6 shadow-sm border border-gray-100 mb-6 text-center relative overflow-hidden">
+      <div className="glass rounded-3xl p-6 shadow-sm border border-gray-100 mb-6 text-center relative overflow-hidden">
         <div className="absolute top-0 left-0 w-full h-16 bg-primary/5"></div>
         
         <div className="relative z-10">
