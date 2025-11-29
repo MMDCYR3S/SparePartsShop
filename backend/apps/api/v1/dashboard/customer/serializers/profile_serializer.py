@@ -6,12 +6,23 @@ from apps.orders.models import Order, OrderItem
 
 # ========= Profile Serializer ========= #
 class ProfileSerializer(serializers.ModelSerializer):
-    username = serializers.CharField(source='user.username')
-    email = serializers.EmailField(source='user.email')
+    username = serializers.CharField(source='user.username', read_only=True)
+    email = serializers.EmailField(source='user.email', read_only=True) 
+    new_email = serializers.EmailField(write_only=True, required=False, allow_null=True)
     
     class Meta:
         model = Profile
-        fields = ('first_name', 'last_name', 'username', 'email', 'phone', 'landline', 'address', 'photo')
+        fields = ('first_name', 'last_name', 'username', "new_email",'email', 'phone', 'landline', 'address', 'photo')
+    
+    def update(self, instance, validated_data):
+        user_email = validated_data.pop('new_email', None)
+
+        if user_email is not None:
+            user = instance.user
+            user.email = user_email
+            user.save()
+
+        return super().update(instance, validated_data)
 
 # ========= Product Serializer ========= #
 class ProductSerializer(serializers.ModelSerializer):
